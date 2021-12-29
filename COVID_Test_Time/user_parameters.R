@@ -45,7 +45,7 @@ epsilon_CVt6m <- 1
 
 freqShock <- 7
 Xshock <- 5
-test_frequency <- 2.0
+test_frequency <- 7.0
 tau <- 1.0/test_frequency ### weekly testing
 tau_VAXP <- 1.0/test_frequency
 tau_EVP <- 1.0/test_frequency

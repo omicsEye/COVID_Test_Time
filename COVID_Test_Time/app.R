@@ -36,7 +36,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "test_frequency",
-          label = "test_frequency:",
+          label = "test_frequency (one every ? days):",
           value = 7,
           min = 0
         )
@@ -517,16 +517,17 @@ server <- function(input, output) {
 
     freqShock <- input$freqShock
     Xshock <- input$Xshock
-    test_frequency <- input$test_frequency
-    tau <- 1.0 / test_frequency ### weekly testing
-    tau_VAXP <- 1.0 / test_frequency
-    tau_EVP <- 1.0 / test_frequency
-    tau_CVP <- 1.0 / test_frequency
+    #test_frequency <- input$test_frequency
+    number_of_tests <- input$ncycles / input$test_frequency
+    tau <- 1.0 / number_of_tests ### weekly testing
+    tau_VAXP <- 1.0 / number_of_tests
+    tau_EVP <- 1.0 / number_of_tests
+    tau_CVP <- 1.0 / number_of_tests
     Se <- input$Se
     Sp <- input$Sp
     mu <- input$mu
 
-    results <- covidpred(
+    prediction_results <- covidpred(
       U0,
       E0,
       A0,
@@ -576,13 +577,17 @@ server <- function(input, output) {
       rho,
       delta
     )
-    results <- as.data.frame(results)
+    results <- list()
+    results$Data <- as.data.frame(prediction_results)
+    results$n<- n
+    results$ncycles <- ncycles
     return(results)
   }
   output$accumlative <- renderPlot({
     results <-  read_input()
-    ggplot2::ggplot(results,
-                    aes(x=seq(rownames(results)), y=M + FP + TP + TPCVP + TPEVP + TPVAXP + FPEVP + FPCVP)) +
+    results_data <- results$Data
+    ggplot2::ggplot(results_data,
+                    aes(x=seq(rownames(results_data)), y=M + FP + TP + TPCVP + TPEVP + TPVAXP + FPEVP + FPCVP)) +
       ggplot2::geom_line() +
       ggplot2::geom_hline(yintercept = 0,
                           color = "red",
@@ -594,7 +599,8 @@ server <- function(input, output) {
   })
   output$newInf <- renderPlot({
     results <-  read_input()
-    ggplot2::ggplot(results, aes(x=seq(rownames(results)), y=newinf*n/100)) +
+    results_data <- results$Data
+    ggplot2::ggplot(results_data, aes(x=seq(rownames(results_data)), y=newinf*results$n/100)) +
       ggplot2::geom_line() +
       ggplot2::geom_hline(yintercept = 0,
                           color = "red",
@@ -606,7 +612,8 @@ server <- function(input, output) {
   })
   output$results <- DT::renderDataTable({
     results <-  read_input()
-    DT::datatable(results, options = list(lengthMenu = c(10, 30, ncycles), pageLength = 5))
+    results_data <- results$Data
+    DT::datatable(results_data, options = list(lengthMenu = c(10, 30, results$ncycles), pageLength = 5))
   })
 
 }

@@ -208,6 +208,7 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
 
   ### new infections
   newinf <- N
+  result_data <- NULL
   for (i in 1:ncycles)
   {
     ### vaccine/EV/CV effectiveness at time t
@@ -361,12 +362,11 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
 
     totalN[i+1] <- N[i+1] + M[i+1] + FP[i+1] + TP[i+1] + FPVAXP[i+1] + TPVAXP[i+1] +
       FPEVP[i+1] + TPEVP[i+1] + FPCVP[i+1] + TPCVP[i+1] + D[i+1]
-
   }
-
   newinf <- (E + EVAXP + EEVP + ECVP)*theta
   cumnewinf <- cumsum(E + EVAXP + EEVP + ECVP)*theta
-  cbind(N, U, E, A, M, FP, TP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP,
+  result_data <- cbind(N, U, E, A, M, FP, TP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP,
         UEVP, EEVP, AEVP, FPEVP, TPEVP, UCVP, ECVP, ACVP, FPCVP, TPCVP, D, newinf, cumnewinf)
+  return(result_data)
 }
 
