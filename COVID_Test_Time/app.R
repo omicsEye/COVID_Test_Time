@@ -1,8 +1,10 @@
 library(shiny)
 library(DT)
-library(ggplot2)
+library(ggplot2);library(plotly)
+library(data.table)
 source("model.R", local = TRUE)
 source("utils.R", local = TRUE)
+source("user_parameters.R")
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
   # App title ----
@@ -23,11 +25,18 @@ ui <- fluidPage(
       width = 4,
       fluidRow(column(
         width = 10,
+        actionButton(
+          
+          inputId = "resetinput",
+          label = "Reset all to default")
+      )),
+      fluidRow(column(
+        width = 10,
         numericInput(
           "num",
           inputId = "n",
           label = "n:",
-          value = 25000,
+          value = n,
           min = 1
         )
       )),
@@ -37,7 +46,7 @@ ui <- fluidPage(
           "num",
           inputId = "test_frequency",
           label = "test_frequency (one every ? days):",
-          value = 7,
+          value = test_frequency,
           min = 0
         )
       )),
@@ -47,7 +56,7 @@ ui <- fluidPage(
           "num",
           inputId = "theta",
           label = "theta:",
-          value = 1.0 / 3.0,
+          value = theta,
           min = 0
         )
       )),
@@ -57,17 +66,17 @@ ui <- fluidPage(
           "num",
           inputId = "sigma",
           label = "sigma:",
-          value = 0.031,
+          value = sigma,
           min = 0
         )
       )),
       fluidRow(column(
         width = 10,
         numericInput(
-          "num",
+          "num",   
           inputId = "rho",
           label = "rho:",
-          value = 0.071,
+          value = rho,
           min = 0
         )
       )),
@@ -88,7 +97,7 @@ ui <- fluidPage(
           "num",
           inputId = "freqShock",
           label = "freqShock:",
-          value = 7,
+          value = freqShock,
           min = 0
         )
       )),
@@ -98,7 +107,7 @@ ui <- fluidPage(
           "num",
           inputId = "Xshock",
           label = "Xshock:",
-          value = 5,
+          value = Xshock,
           min = 0
         )
       )),
@@ -108,7 +117,7 @@ ui <- fluidPage(
           "num",
           inputId = "E0",
           label = "E0:",
-          value = 0,
+          value = E0,
           min = 0
         )
       )),
@@ -118,7 +127,7 @@ ui <- fluidPage(
           "num",
           inputId = "A0",
           label = "A0:",
-          value = 25,
+          value = A0,
           min = 0
         )
       )),
@@ -128,7 +137,7 @@ ui <- fluidPage(
           "num",
           inputId = "M0",
           label = "M0:",
-          value = 0,
+          value = M0,
           min = 0
         )
       )),
@@ -138,7 +147,7 @@ ui <- fluidPage(
           "num",
           inputId = "TP0",
           label = "TP0:",
-          value = 0,
+          value = TP0,
           min = 0
         )
       )),
@@ -148,7 +157,7 @@ ui <- fluidPage(
           "num",
           inputId = "FP0",
           label = "FP0:",
-          value = 0,
+          value = FP0,
           min = 0
         )
       )),
@@ -159,7 +168,7 @@ ui <- fluidPage(
           "num",
           inputId = "EVAXP0",
           label = "EVAXP0:",
-          value = 0,
+          value = EVAXP0,
           min = 0
         )
       )),
@@ -169,7 +178,7 @@ ui <- fluidPage(
           "num",
           inputId = "AVAXP0",
           label = "AVAXP0:",
-          value = 0,
+          value = AVAXP0,
           min = 0
         )
       )),
@@ -179,7 +188,7 @@ ui <- fluidPage(
           "num",
           inputId = "TPVAXP0",
           label = "TPVAXP0:",
-          value = 0,
+          value = TPVAXP0,
           min = 0
         )
       )),
@@ -189,7 +198,7 @@ ui <- fluidPage(
           "num",
           inputId = "FPVAXP0",
           label = "FPVAXP0:",
-          value = 2.5,
+          value = FPVAXP0,
           min = 0
         )
       )),
@@ -199,7 +208,7 @@ ui <- fluidPage(
           "num",
           inputId = "EEVP0",
           label = "EEVP0:",
-          value = 0,
+          value = EEVP0,
           min = 0
         )
       )),
@@ -209,7 +218,7 @@ ui <- fluidPage(
           "num",
           inputId = "AEVP0",
           label = "AEVP0:",
-          value = 0,
+          value = AEVP0,
           min = 0
         )
       )),
@@ -219,7 +228,7 @@ ui <- fluidPage(
           "num",
           inputId = "TPEVP0",
           label = "TPEVP0:",
-          value = 2.5,
+          value = TPEVP0,
           min = 0
         )
       )),
@@ -229,7 +238,7 @@ ui <- fluidPage(
           "num",
           inputId = "FPEVP0",
           label = "FPEVP0:",
-          value = 2.5,
+          value = FPEVP0,
           min = 0
         )
       )),
@@ -239,7 +248,7 @@ ui <- fluidPage(
           "num",
           inputId = "ECVP0",
           label = "ECVP0:",
-          value = 0,
+          value = ECVP0,
           min = 0
         )
       )),
@@ -249,7 +258,7 @@ ui <- fluidPage(
           "num",
           inputId = "ACVP0",
           label = "ACVP0:",
-          value = 0,
+          value = ACVP0,
           min = 0
         )
       )),
@@ -259,7 +268,7 @@ ui <- fluidPage(
           "num",
           inputId = "TPCVP0",
           label = "TPCVP0:",
-          value = 0,
+          value = TPCVP0,
           min = 0
         )
       )),
@@ -269,7 +278,7 @@ ui <- fluidPage(
           "num",
           inputId = "FPCVP0",
           label = "FPCVP0:",
-          value = 0,
+          value = FPCVP0,
           min = 0
         )
       )),
@@ -279,7 +288,7 @@ ui <- fluidPage(
           "num",
           inputId = "Rstar",
           label = "Rstar:",
-          value = 0.071,
+          value = Rstar,
           min = 0
         )
       )),
@@ -289,7 +298,7 @@ ui <- fluidPage(
           "num",
           inputId = "delta",
           label = "delta:",
-          value = 0.0000357,
+          value = delta,
           min = 0
         )
       )),
@@ -299,7 +308,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_VAXi0",
           label = "epsilon_VAXi0:",
-          value = 0.85,
+          value = epsilon_VAXi0,
           min = 0
         )
       )),
@@ -309,7 +318,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_VAXi6m",
           label = "epsilon_VAXi6m:",
-          value = 0.66,
+          value = epsilon_VAXi6m,
           min = 0
         )
       )),
@@ -319,7 +328,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_VAXt0",
           label = "epsilon_VAXt0:",
-          value = 0.25,
+          value = epsilon_VAXt0,
           min = 0
         )
       )),
@@ -329,7 +338,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_VAXt6m",
           label = "epsilon_VAXt6m:",
-          value = 0.25,
+          value = epsilon_VAXt6m,
           min = 0
         )
       )),
@@ -339,7 +348,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_EVi0",
           label = "epsilon_EVi0:",
-          value = 0.85,
+          value = epsilon_EVi0,
           min = 0
         )
       )),
@@ -349,7 +358,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_EVi6m",
           label = "epsilon_EVi6m:",
-          value = 0.66,
+          value = epsilon_EVi6m,
           min = 0
         )
       )),
@@ -359,7 +368,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_EVt0",
           label = "epsilon_EVt0:",
-          value = .50,
+          value = epsilon_EVt0,
           min = 0
         )
       )),
@@ -369,7 +378,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_EVt6m",
           label = "epsilon_EVt6m:",
-          value = 0.25,
+          value = epsilon_EVt6m,
           min = 0
         )
       )),
@@ -379,7 +388,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_CVi0",
           label = "epsilon_CVi0:",
-          value = 1,
+          value = epsilon_CVi0,
           min = 0
         )
       )),
@@ -389,7 +398,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_CVi6m",
           label = "epsilon_CVi6m:",
-          value = 1,
+          value = epsilon_CVi6m,
           min = 0
         )
       )),
@@ -399,7 +408,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_CVt0",
           label = "epsilon_CVt0:",
-          value = 1,
+          value = epsilon_CVt0,
           min = 0
         )
       )),
@@ -409,7 +418,7 @@ ui <- fluidPage(
           "num",
           inputId = "epsilon_CVt6m",
           label = "epsilon_CVt6m:",
-          value = 1,
+          value = epsilon_CVt6m,
           min = 0
         )
       )),
@@ -418,8 +427,8 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "Se",
-          label = "Se:",
-          value = 0.9,
+          label = "Sensitivity:",
+          value = Se,
           min = 0
         )
       )),
@@ -428,8 +437,8 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "Sp",
-          label = "Sp:",
-          value = 0.95,
+          label = "Specificity:",
+          value = Sp,
           min = 0
         )
       )),
@@ -439,7 +448,7 @@ ui <- fluidPage(
           "num",
           inputId = "mu",
           label = "mu:",
-          value = 1,
+          value = mu,
           min = 0
         )
       ))
@@ -447,9 +456,9 @@ ui <- fluidPage(
     # Main panel for displaying outputs ----
     mainPanel(# Output: Histogram ----
               tabsetPanel(
-                tabPanel("Accumlative", plotOutput(outputId = "accumlative")),
-                tabPanel("New infected", plotOutput(outputId = "newInf")),
-                tabPanel("Output Data Frame", DT::dataTableOutput("results"))
+                tabPanel("Cumulative on isolation", plotlyOutput(outputId = "accumlative")),
+                tabPanel("New infected", plotlyOutput(outputId = "newInf")),
+                 tabPanel("Output Data Frame", DT::dataTableOutput("results"))
                 #tabPanel("plot", plotOutput(outputId = "distPlot"))
               ))
   )
@@ -458,7 +467,7 @@ ui <- fluidPage(
 
 
 # Define server logic required to draw a histogram ----
-server <- function(input, output) {
+server <- function(session, input, output) {
   # output$distPlot <- renderPlot({
   #
   #   ggplot2::ggplot(calculation_data_long, aes(R, rate, color = Testing)) +
@@ -469,6 +478,23 @@ server <- function(input, output) {
   #     ggplot2::ggtitle ("Effect of different Vaxxed Testing Frequencies\nHolding the Unvaxxed Frequency Constant")+
   #     omicsArt::theme_omicsEye_presentation()
   # })
+  ### JS: Code to reset to default inputs
+  initialInputs <- isolate(reactiveValuesToList(input))
+  observe({
+    # OPTIONAL - save initial values of dynamic inputs
+    inputValues <- reactiveValuesToList(input)
+    initialInputs <<- utils::modifyList(inputValues, initialInputs)
+  })
+  observeEvent(input$resetinput, {
+    for (id in names(initialInputs)) {
+      value <- initialInputs[[id]]
+      # For empty chec`kboxGroupInputs
+      if (is.null(value)) value <- ""
+      session$sendInputMessage(id, list(value = value))
+    }
+  })
+  ### end JS code
+  
   read_input <- function() {
     n <- input$n
     E0 <- input$E0
@@ -583,32 +609,38 @@ server <- function(input, output) {
     results$ncycles <- ncycles
     return(results)
   }
-  output$accumlative <- renderPlot({
+  output$accumlative <- renderPlotly({
     results <-  read_input()
     results_data <- results$Data
-    ggplot2::ggplot(results_data,
-                    aes(x=seq(rownames(results_data)), y=M + FP + TP + TPCVP + TPEVP + TPVAXP + FPEVP + FPCVP)) +
+    ggplotly(
+      ggplot2::ggplot(results_data,
+                    aes(x=seq(rownames(results_data)),
+                        y=M + FP + TP + TPCVP + TPEVP + TPVAXP + FPVAXP + FPEVP + FPCVP)) +
       ggplot2::geom_line() +
       ggplot2::geom_hline(yintercept = 0,
                           color = "red",
                           size = 0.1) +
       ggplot2::xlab ("Days") +
-      ggplot2::ylab ("M + FP + TP + TPCVP + TPEVP + TPVAXP + FPEVP + FPCVP") +
-      ggplot2::ggtitle ("Cummulative number of infected indivituals") +
-      theme_omicsEye_presentation()
+      ggplot2::ylab ("Total number of individuals in isolation") +
+      ggplot2::ggtitle ("Total number of indivituals in isolation each day") # +
+      # theme_omicsEye_presentation())
+    )
   })
-  output$newInf <- renderPlot({
+  output$newInf <- renderPlotly({
     results <-  read_input()
     results_data <- results$Data
-    ggplot2::ggplot(results_data, aes(x=seq(rownames(results_data)), y=newinf*results$n/100)) +
-      ggplot2::geom_line() +
-      ggplot2::geom_hline(yintercept = 0,
-                          color = "red",
-                          size = 0.1) +
-      ggplot2::xlab ("Days") +
-      ggplot2::ylab ("newinf*n/100") +
-      ggplot2::ggtitle ("New infected indivituals") +
-      theme_omicsEye_presentation()
+    p <- ggplot2::ggplot(results_data, aes(
+      x=seq(rownames(results_data)), y=newinf)) + # *results$n/100)) +  # i think newinf is actual number of new infections
+        ggplot2::geom_line() +
+        ggplot2::geom_hline(yintercept = 0,
+                            color = "red",
+                            size = 0.1) +
+        ggplot2::xlab ("Days") +
+        # ggplot2::ylab ("newinf*n/100") +
+        ggplot2::ylab('Number of new infections per day') +
+        ggplot2::ggtitle ("Newly infected indivituals") 
+      # theme_omicsEye_presentation()
+      ggplotly(p)
   })
   output$results <- DT::renderDataTable({
     results <-  read_input()
