@@ -58,8 +58,8 @@ epsilon_CVi6m <- 0.6 # 1 # it may wane faster than 6M
 epsilon_CVt0 <- 1
 epsilon_CVt6m <- 0.6 # 1
 
-freqShock <- 7
-Xshock <- 175 # JS: This is more realistic than 5 for 25,000
+freqShock <- 1
+Xshock <- 25 # JS: This is more realistic than 5 for 25,000; should we use the current incidence (~0.3%)
 testfreq_UNP <- 7.0
 testfreq_VAXP <- 7.0
 testfreq_EVP <- 7.0

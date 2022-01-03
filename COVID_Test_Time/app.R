@@ -135,7 +135,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "Xshock",
-          label = "Weekly number of inmported infections (Xshock):",
+          label = "Daily number of inmported infections (Xshock):",
           value = Xshock,
           min = 0
         )
