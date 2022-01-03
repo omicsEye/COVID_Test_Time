@@ -378,7 +378,7 @@ ui <- fluidPage(
           "num",
           inputId = "ncycles",
           label = "Number of cycles:",
-          value = 120,
+          value = ncycles,
           min = 0
         )
       ))
