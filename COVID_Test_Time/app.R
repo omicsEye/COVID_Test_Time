@@ -511,7 +511,7 @@ server <- function(input, output) {
                           color = "red",
                           size = 0.1) +
       ggplot2::xlab ("Days") +
-      ggplot2::ylab ("cumnewinf") +
+      ggplot2::ylab ("Cumulative number of new infections") +
       ggplot2::ggtitle ("Cumulative number of new infections") +
       theme_omicsEye_presentation()
   })
@@ -525,7 +525,7 @@ server <- function(input, output) {
                           color = "red",
                           size = 0.1) +
       ggplot2::xlab ("Days") +
-      ggplot2::ylab ("newinf") +
+      ggplot2::ylab ("Daily new infections") +
       ggplot2::ggtitle ("Daily new infections") +
       theme_omicsEye_presentation()
   })
