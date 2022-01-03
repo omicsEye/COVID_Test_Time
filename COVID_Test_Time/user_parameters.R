@@ -1,14 +1,14 @@
 # Initial / Default Parameters
 n <- 25000
-nUNP <- 0.025*n ### 2.5% unprotected (previous U0)
-nVAXP <- 3/25 * n #0.8*n  # vaccine protected (previous UVAXP0)
+nUNP <- 0.02*n ### 2 % unprotected (previous U0)
+nVAXP <- (1-3/25) * n #0.8*n  # vaccine protected (previous UVAXP0)
 # there are about 500 non-vaccinated + 2500 without boosters; consider these non-vaccinated
 nEVP <- 0.05*n # prior infection with earlier variants (previous UEVP0)
 nCVP <- 0.02 * n #0.125*n # prior infection with current variant (Omicron) (previous UCVP0)
 # # We did not have that many infections; based on 2000/100K weekly peak rate in the DC community
-AUNP0 <- 25 # asymptomatic, unprotected (previous A0)
-AVAXP0 <- 0.05*nVAXP # asymptomatic, vaccine protected
-AEVP0 <- 0.04*nEVP # asynptomatic, prior infection with earlier variants
+AUNP0 <- 0.2* nUNP # asymptomatic, unprotected (previous A0)
+AVAXP0 <- 0.025*nVAXP # asymptomatic, vaccine protected
+AEVP0 <- 0.025*nEVP # asynptomatic, prior infection with earlier variants
 ACVP0 <- 0 # asymptomatic, prior infection with current variant (Omicron)
 
 # E0 <- 1/1000 * n # 0 #exposed, asymptomatic # JS: used 1/3 the DC prevalence
@@ -36,12 +36,12 @@ ACVP0 <- 0 # asymptomatic, prior infection with current variant (Omicron)
 
 
 daystoincubation <- 3
-daystorecovery <- 10
+daystorecovery <- 8
 percenttosymptoms <- 0.3
 fptouninfpool <- 1
 percentfatality <- 0.0005
-R0 <- 3   ### reproduction rate # is 1.6 more realistic with masks, etc?
-ncycles <- 120
+R0 <- 3.7   ### reproduction rate # is 1.6 more realistic with masks, etc?
+ncycles <- 10
 
 epsilon_VAXi0 <- 0.7 # 0.85 # assuming boosted (55-80 against symptomatic - reduced by 10% for actual infection)
 epsilon_VAXi6m <- 0.4 # 0.66 # (taking the low range of booster; get true number from 10 weeks study)
