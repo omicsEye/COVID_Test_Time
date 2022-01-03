@@ -3,12 +3,12 @@
 ####
 ####
 #### Multiple (22) states
-# U: uninfected, susceptible
-# E: exposed, asymptomatic
-# A: infected, asymptomatic
+# UUNP: uninfected, susceptible, unprotected
+# EUNP: exposed, asymptomatic, unprotected
+# AUNP: infected, asymptomatic, unprotected
 # M: infected, symptomatic, isolated
-# TP: infected, true positive, isolated
-# FP: uninfected, false positive, isolated
+# TPUNP: infected, true positive, isolated, unprotected
+# FPUNP: uninfected, false positive, isolated, unprotected
 
 # UVAXP: uninfected, susceptible, vaccine protected
 # EVAXP: exposed, asymptomatic, vaccine protected
@@ -30,7 +30,7 @@
 
 # D: dead
 
-#### Parameters
+#### Model Parameters
 #
 # beta: rate at which infected individuals contact and infect susceptible
 #       individuals; applies to transmission to persons in states E and EP
@@ -79,7 +79,7 @@
 ## a cycle time of one day
 
 ### Testing
-## tau: constant rate for persons who are not antibody-protected
+## tau_UNP: constant rate for persons who are not antibody-protected
 ## tau_VAXp: constant rate for persons who are vaccine protected
 ## tau_EVp: constant rate for persons who had prior infection with earlier variants
 ## tau_CVp: constant rate for persons who had prior infection with current variant
@@ -100,20 +100,85 @@
 ### to take place (i.e., the magnitude of the shock) assuming that nobody is
 ### antibody-protected.
 
-#### Equations
+#### User Specified Parameters
 
-covidpred <- function(U0, E0, A0, M0, TP0, FP0,
-                      UVAXP0, EVAXP0, AVAXP0, TPVAXP0, FPVAXP0,
-                      UEVP0, EEVP0, AEVP0, TPEVP0, FPEVP0,
-                      UCVP0, ECVP0, ACVP0, TPCVP0, FPCVP0,
-                      ncycles,beta,
+### Input arguments:
+### n = population size
+### Population sizes of four groups (nUNP, nVAXP, nEVP, nCVP):
+###           (1) unprotected; (2) vaccine protected;
+###           (3) prior infection with earlier variants;
+###           (4) prior infection with current variant (Omicron)
+### Asymptomatic infections at time 0 in each group: AUNP0, AVAXP0, AEVP0, ACVP0
+
+### freqShcok: Frequency of exogeneous shocks (days)
+### Xshock: number of new infections in a cycle where imported infections are assumed to take
+###   place (i.e., the magnitude of the shock), assuming that nobody is antibody-protected.
+###   (This value is adjusted to account for antibody protection in the susceptible population.)
+
+### R0: Reproduction number
+
+### Se: Sensitivity of COVID tests
+### Sp: pecificity of COVID tests
+
+### daystoincubation: Days to incubation (Exposed --> Asymptomatic)
+### daystorecovery: Time to recovery (days)
+### percenttosymptoms: %asymptomatics advancing to symptoms
+### fptouninfpool: Return of FPs to the Uninfected pool (days)
+### percentfatality: Symptoms case fatality ratio
+
+### testfreq: Test frequencies (days) for each group (use 999999 or larger if no testing)
+### For each protected group, four parameters corresponding to
+###         (1) preventive efficacy at time 0; (epsilon_iVAXP0, epsilon_iEVP0, epsilon_iCVP0)
+###         (2) preventive efficacy at 6 months; (epsilon_iVAXP6m, epsilon_iEVP6m, epsilon_iCVP6m)
+###         (3) transmission efficacy at time 0; (epsilon_tVAXP0, epsilon_tEVP0, epsilon_tCVP0)
+###         (4) transmission efficacy at 6 months (epsilon_tVAXP6m, epsilon_tEVP6m, epsilon_tCVP6m)
+
+### ncycles: number of cycles (days)
+
+
+covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
+                      ncycles, daystoincubation, daystorecovery, percenttosymptoms,
+                      fptouninfpool, percentfatality, R0,
                       epsilon_VAXt0, epsilon_VAXt6m, epsilon_VAXi0, epsilon_VAXi6m,
                       epsilon_EVt0, epsilon_EVt6m, epsilon_EVi0, epsilon_EVi6m,
                       epsilon_CVt0, epsilon_CVt6m, epsilon_CVi0, epsilon_CVi6m,
-                      freqShock, Xshock,
-                      tau, tau_VAXP, tau_EVP, tau_CVP, Se, Sp, mu,
-                      theta, sigma, rho, delta)
+                      freqShock, Xshock, testfreq_UNP, testfreq_VAXP, testfreq_EVP, testfreq_CVP,
+                      Se, Sp)
 {
+  UUNP0 <- nUNP - AUNP0
+  EUNP0 <- 0
+  M0 <- 0
+  TPUNP0 <- 0
+  FPUNP0 <- 0
+
+  UVAXP0 <- nVAXP - AVAXP0
+  EVAXP0 <- 0
+  TPVAXP0 <- 0
+  FPVAXP0 <- 0
+
+  UEVP0 <- nEVP - AEVP0
+  EEVP0 <- 0
+  TPEVP0 <- 0
+  FPEVP0 <- 0
+
+  UCVP0 <- nCVP - ACVP0
+  ECVP0 <- 0
+  TPCVP0 <- 0
+  FPCVP0 <- 0
+  D0 <- 0
+
+
+  theta <- 1.0/daystoincubation
+  rho <- 1.0/daystorecovery
+  sigma <- rho*percenttosymptoms/(1 - percenttosymptoms)
+  delta <- rho*percentfatality/(1-percentfatality)
+  beta <- R0*(sigma+rho)
+  mu <- 1.0/fptouninfpool
+
+  tau_UNP <- 1.0/testfreq_UNP
+  tau_VAXP <- 1.0/testfreq_VAXP
+  tau_EVP <- 1.0/testfreq_EVP
+  tau_CVP <- 1.0/testfreq_CVP
   ### calculate decay parameters
   kappa_VAXt <- log(epsilon_VAXt0/epsilon_VAXt6m)/182.5
   kappa_VAXi <- log(epsilon_VAXi0/epsilon_VAXi6m)/182.5
@@ -126,14 +191,14 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
   It <- c(0, rep(c(rep(0, freqShock-1),1),ncycles))
   It <- It[1:(ncycles+1)]
 
-  N <- c(1:(ncycles+1))
+  N <- rep(0, ncycles+1)
   totalN <- N
-  U <- N
-  E <- N
-  A <- N
+  UUNP <- N
+  EUNP <- N
+  AUNP <- N
   M <- N
-  TP <- N
-  FP <- N
+  TPUNP <- N
+  FPUNP <- N
 
 
   UVAXP <- N
@@ -157,12 +222,12 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
   D <- N
 
   ### Baseline
-  U[1] <- U0
-  E[1] <- E0
-  A[1] <- A0
+  UUNP[1] <- UUNP0
+  EUNP[1] <- EUNP0
+  AUNP[1] <- AUNP0
   M[1] <- M0
-  TP[1] <- TP0
-  FP[1] <- FP0
+  TPUNP[1] <- TPUNP0
+  FPUNP[1] <- FPUNP0
 
   UVAXP[1] <- UVAXP0
   EVAXP[1] <- EVAXP0
@@ -182,18 +247,18 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
   TPCVP[1] <- TPCVP0
   FPCVP[1] <- FPCVP0
 
-  D[1] <- 0
+  D[1] <- D0
 
   ### non-isolated transmission pool at baseline
-  N[1] <- U[1] + E[1] + A[1] +
-          UVAXP[1] + EVAXP[1] + AVAXP[1] +
-          UEVP[1] + EEVP[1] + AEVP[1] +
-          UCVP[1] + ECVP[1] + ACVP[1]
-  totalN[1] <- N[1] + M[1] + FP[1] + TP[1] + FPVAXP[1] + TPVAXP[1] +
-              FPEVP[1] + TPEVP[1] + FPCVP[1] + TPCVP[1] + D[1]
+  N[1] <- UUNP[1] + EUNP[1] + AUNP[1] +
+    UVAXP[1] + EVAXP[1] + AVAXP[1] +
+    UEVP[1] + EEVP[1] + AEVP[1] +
+    UCVP[1] + ECVP[1] + ACVP[1]
+  totalN[1] <- N[1] + M[1] + FPUNP[1] + TPUNP[1] + FPVAXP[1] + TPVAXP[1] +
+    FPEVP[1] + TPEVP[1] + FPCVP[1] + TPCVP[1] + D[1]
 
-  ### tansmissions to person in U, UVAXP, UEVP, and UCVP
-  ZU <- N
+  ### transmissions to person in UUNP, UVAXP, UEVP, and UCVP
+  ZUUNP <- N
   ZUVAXP <- N
   ZUEVP <- N
   ZUCVP <- N
@@ -201,14 +266,13 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
   ### vaccination/antibody- adjusted magnitude of imported infections
   X <- N
   ### imported transmissions to persons in U, UVAXP, UEVP, UCVP
-  YU <- N
+  YUUNP <- N
   YUVAXP <- N
   YUEVP <- N
   YUCVP <- N
 
   ### new infections
   newinf <- N
-  result_data <- NULL
   for (i in 1:ncycles)
   {
     ### vaccine/EV/CV effectiveness at time t
@@ -224,26 +288,26 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
 
 
     ### transmissions to persons in U, UVAXP, UEVP, UCVP
-    tmp <- A[i] + (1- epsilon_VAXt_t)*AVAXP[i] +
-                  (1- epsilon_EVt_t)*AEVP[i] +
-                  (1- epsilon_CVt_t)*ACVP[i]
+    tmp <- AUNP[i] + (1- epsilon_VAXt_t)*AVAXP[i] +
+      (1- epsilon_EVt_t)*AEVP[i] +
+      (1- epsilon_CVt_t)*ACVP[i]
 
-    ZU[i+1] <- beta*U[i]*tmp/N[i]
+    ZUUNP[i+1] <- beta*UUNP[i]*tmp/N[i]
     ZUVAXP[i+1] <- beta*(1- epsilon_VAXi_t)*UVAXP[i]*tmp/N[i]
     ZUEVP[i+1] <- beta*(1- epsilon_EVi_t)*UEVP[i]*tmp/N[i]
     ZUCVP[i+1] <- beta*(1- epsilon_CVi_t)*UCVP[i]*tmp/N[i]
 
-    ### antibody-adjusted magnitute of imported infections
+    ### antibody-adjusted magnitude of imported infections
 
-    sumUt <- U[i] + UVAXP[i] + UEVP[i] + UCVP[i]
-    sumUt_wt <- U[i] + (1- epsilon_VAXi_t)*UVAXP[i] +
-              (1- epsilon_EVi_t)*UEVP[i] +
-              (1- epsilon_CVi_t)*UCVP[i]
+    sumUt <- UUNP[i] + UVAXP[i] + UEVP[i] + UCVP[i]
+    sumUt_wt <- UUNP[i] + (1- epsilon_VAXi_t)*UVAXP[i] +
+      (1- epsilon_EVi_t)*UEVP[i] +
+      (1- epsilon_CVi_t)*UCVP[i]
 
     X[i+1] <- It[i+1] * Xshock * sumUt_wt/sumUt
 
     ### imported transmissions to persons in U, UVAXP, UEVP, UCVP
-    YU[i+1] <- X[i+1]*U[i]/sumUt_wt
+    YUUNP[i+1] <- X[i+1]*UUNP[i]/sumUt_wt
     YUVAXP[i+1] <- X[i+1]*(1- epsilon_VAXi_t)*UVAXP[i]/sumUt_wt
     YUEVP[i+1] <- X[i+1]*(1- epsilon_EVi_t)*UEVP[i]/sumUt_wt
     YUCVP[i+1] <- X[i+1]*(1- epsilon_CVi_t)*UCVP[i]/sumUt_wt
@@ -251,38 +315,36 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
     ### Uninfected
     if (i == 1)
     {
-      U[i+1] <- U[i] - 0*tau*(1-Sp) - ZU[i+1] - YU[i+1] + mu*FP[i]
+      UUNP[i+1] <- UUNP[i] - 0*tau_UNP*(1-Sp) - ZUUNP[i+1] - YUUNP[i+1] + mu*FPUNP[i]
     }
     else
     {
-      U[i+1] <- U[i] - U[i-1]*tau*(1-Sp) - ZU[i+1] - YU[i+1] + mu*FP[i]
+      UUNP[i+1] <- UUNP[i] - UUNP[i-1]*tau_UNP*(1-Sp) - ZUUNP[i+1] - YUUNP[i+1] + mu*FPUNP[i]
     }
-    U[i+1] <- max(U[i+1], 0) ### U cannot be below 0
+    UUNP[i+1] <- max(UUNP[i+1], 0) ### U cannot be below 0
     ### Exposed
-    E[i+1] <- E[i]*(1-theta) + ZU[i+1] + YU[i+1]
+    EUNP[i+1] <- EUNP[i]*(1-theta) + ZUUNP[i+1] + YUUNP[i+1]
     ### Asymptomatic
     if (i == 1)
-      A[i+1] <- A[i]*(1 - sigma - rho) - 0*tau*Se + E[i]*theta
+      AUNP[i+1] <- AUNP[i]*(1 - sigma - rho) - 0*tau_UNP*Se + EUNP[i]*theta
     else
-      A[i+1] <- A[i]*(1 - sigma - rho) - A[i-1]*tau*Se + E[i]*theta
+      AUNP[i+1] <- AUNP[i]*(1 - sigma - rho) - AUNP[i-1]*tau_UNP*Se + EUNP[i]*theta
     ### Symptomatic
     ### Paltiel and Schwartz didn't include AP--> M or TPP -->M
-    M[i+1] <- M[i]*(1 - rho - delta) + sigma*(A[i] + TP[i] +
+    M[i+1] <- M[i]*(1 - rho - delta) + sigma*(AUNP[i] + TPUNP[i] +
                                                 AVAXP[i] + TPVAXP[i] +
                                                 AEVP[i] + TPEVP[i] +
                                                 ACVP[i] + TPCVP[i])
-    #M[i+1] <- M[i]*(1 - rho - delta) + sigma*(A[i] + TP[i])
-
     ### false positives
     if (i == 1)
-      FP[i+1] <- FP[i]*(1-mu) + 0*tau*(1-Sp)
+      FPUNP[i+1] <- FPUNP[i]*(1-mu) + 0*tau_UNP*(1-Sp)
     else
-      FP[i+1] <- FP[i]*(1-mu) + U[i-1]*tau*(1-Sp)
+      FPUNP[i+1] <- FPUNP[i]*(1-mu) + UUNP[i-1]*tau_UNP*(1-Sp)
     ### true positives
     if (i == 1)
-      TP[i+1] <- TP[i]*(1 - sigma - rho) + 0*tau*Se
+      TPUNP[i+1] <- TPUNP[i]*(1 - sigma - rho) + 0*tau_UNP*Se
     else
-      TP[i+1] <- TP[i]*(1 - sigma - rho) + A[i-1]*tau*Se
+      TPUNP[i+1] <- TPUNP[i]*(1 - sigma - rho) + AUNP[i-1]*tau_UNP*Se
 
     ### uninfected UVAXP, UEVP, UCVP
     ### recoveries will be added to UCVP
@@ -293,7 +355,7 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
       UEVP[i+1] <- UEVP[i] - 0*tau_EVP*(1-Sp) - ZUEVP[i+1] - YUEVP[i+1] +
         mu*FPEVP[i]
       UCVP[i+1] <- UCVP[i] - 0*tau_CVP*(1-Sp) - ZUCVP[i+1] - YUCVP[i+1] +
-        mu*FPCVP[i] + rho*(A[i]+M[i]+TP[i]+AVAXP[i]+TPVAXP[i]+AEVP[i]+TPEVP[i] +
+        mu*FPCVP[i] + rho*(AUNP[i]+M[i]+TPUNP[i]+AVAXP[i]+TPVAXP[i]+AEVP[i]+TPEVP[i] +
                              ACVP[i]+TPCVP[i])
     }
     else
@@ -303,7 +365,7 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
       UEVP[i+1] <- UEVP[i] - UEVP[i-1]*tau_EVP*(1-Sp) - ZUEVP[i+1] - YUEVP[i+1] +
         mu*FPEVP[i]
       UCVP[i+1] <- UCVP[i] - UCVP[i-1]*tau_CVP*(1-Sp) - ZUCVP[i+1] - YUCVP[i+1] +
-        mu*FPCVP[i] + rho*(A[i]+M[i]+TP[i]+AVAXP[i]+TPVAXP[i]+AEVP[i]+TPEVP[i] +
+        mu*FPCVP[i] + rho*(AUNP[i]+M[i]+TPUNP[i]+AVAXP[i]+TPVAXP[i]+AEVP[i]+TPEVP[i] +
                              ACVP[i]+TPCVP[i])
     }
     ### Exposed
@@ -314,15 +376,15 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
     ### Asymptomatic
     if (i == 1)
     {
-      AVAXP[i+1] <- AVAXP[i]*(1-rho) - 0*tau_VAXP*Se + EVAXP[i]*theta
-      AEVP[i+1] <- AEVP[i]*(1-rho) - 0*tau_EVP*Se + EEVP[i]*theta
-      ACVP[i+1] <- ACVP[i]*(1-rho) - 0*tau_CVP*Se + ECVP[i]*theta
+      AVAXP[i+1] <- AVAXP[i]*(1-sigma-rho) - 0*tau_VAXP*Se + EVAXP[i]*theta
+      AEVP[i+1] <- AEVP[i]*(1-sigma-rho) - 0*tau_EVP*Se + EEVP[i]*theta
+      ACVP[i+1] <- ACVP[i]*(1-sigma-rho) - 0*tau_CVP*Se + ECVP[i]*theta
     }
     else
     {
-      AVAXP[i+1] <- AVAXP[i]*(1-rho) - AVAXP[i-1]*tau_VAXP*Se + EVAXP[i]*theta
-      AEVP[i+1] <- AEVP[i]*(1-rho) - AEVP[i-1]*tau_EVP*Se + EEVP[i]*theta
-      ACVP[i+1] <- ACVP[i]*(1-rho) - ACVP[i-1]*tau_CVP*Se + ECVP[i]*theta
+      AVAXP[i+1] <- AVAXP[i]*(1-sigma-rho) - AVAXP[i-1]*tau_VAXP*Se + EVAXP[i]*theta
+      AEVP[i+1] <- AEVP[i]*(1-sigma-rho) - AEVP[i-1]*tau_EVP*Se + EEVP[i]*theta
+      ACVP[i+1] <- ACVP[i]*(1-sigma-rho) - ACVP[i-1]*tau_CVP*Se + ECVP[i]*theta
     }
 
     ### False positives
@@ -355,18 +417,18 @@ covidpred <- function(U0, E0, A0, M0, TP0, FP0,
 
     D[i+1] <- D[i] + delta*M[i]
 
-    N[i+1] <- U[i+1] + E[i+1] + A[i+1] +
-              UVAXP[i+1] + EVAXP[i+1] + AVAXP[i+1] +
-              UEVP[i+1] + EEVP[i+1] + AEVP[i+1] +
-              UCVP[i+1] + ECVP[i+1] + ACVP[i+1]
+    N[i+1] <- UUNP[i+1] + EUNP[i+1] + AUNP[i+1] +
+      UVAXP[i+1] + EVAXP[i+1] + AVAXP[i+1] +
+      UEVP[i+1] + EEVP[i+1] + AEVP[i+1] +
+      UCVP[i+1] + ECVP[i+1] + ACVP[i+1]
 
-    totalN[i+1] <- N[i+1] + M[i+1] + FP[i+1] + TP[i+1] + FPVAXP[i+1] + TPVAXP[i+1] +
+    totalN[i+1] <- N[i+1] + M[i+1] + FPUNP[i+1] + TPUNP[i+1] + FPVAXP[i+1] + TPVAXP[i+1] +
       FPEVP[i+1] + TPEVP[i+1] + FPCVP[i+1] + TPCVP[i+1] + D[i+1]
-  }
-  newinf <- (E + EVAXP + EEVP + ECVP)*theta
-  cumnewinf <- cumsum(E + EVAXP + EEVP + ECVP)*theta
-  result_data <- cbind(N, U, E, A, M, FP, TP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP,
-        UEVP, EEVP, AEVP, FPEVP, TPEVP, UCVP, ECVP, ACVP, FPCVP, TPCVP, D, newinf, cumnewinf)
-  return(result_data)
-}
 
+  }
+
+  newinf <- (EUNP + EVAXP + EEVP + ECVP)*theta
+  cumnewinf <- cumsum(EUNP + EVAXP + EEVP + ECVP)*theta
+  cbind(N, UUNP, EUNP, AUNP, M, FPUNP, TPUNP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP,
+        UEVP, EEVP, AEVP, FPEVP, TPEVP, UCVP, ECVP, ACVP, FPCVP, TPCVP, D, newinf, cumnewinf, totalN)
+}
