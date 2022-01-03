@@ -145,7 +145,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "nUNP",
-          label = "Number of unprotected (nUNP):",
+          label = "Percent of unprotected (nUNP):",
           value = nUNP,
           min = 0
         )
@@ -155,7 +155,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "nVAXP",
-          label = "Number of fully vaccinated (nVAXP):",
+          label = "Percent of fully vaccinated (nVAXP):",
           value = nVAXP,
           min = 0
         )
@@ -165,7 +165,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "nEVP",
-          label = "Number previously infected with older variants (nEVP):",
+          label = "Percent previously infected with older variants (nEVP):",
           value = nEVP,
           min = 0
         )
@@ -175,7 +175,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "nCVP",
-          label = "Number previously infected with current variant (nCVP):",
+          label = "Percent previously infected with current variant (nCVP):",
           value = nCVP,
           min = 0
         )
@@ -185,7 +185,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "AUNP0",
-          label = "Initial infected, asymptomatic, unprotected (AUNP0)",
+          label = "Initial % infected, asymptomatic, unprotected (AUNP0)",
           value = AUNP0,
           min = 0
         )
@@ -195,7 +195,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "AVAXP0",
-          label = "Initial infected, asymptomatic, vaccinated (AVAXP0)",
+          label = "Initial % infected, asymptomatic, vaccinated (AVAXP0)",
           value = AVAXP0,
           min = 0
         )
@@ -205,7 +205,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "AEVP0",
-          label = "Initial, infected, asymptomatic, previous older variant infection (AEVP0):",
+          label = "% Initial, infected, asymptomatic, previous older variant infection (AEVP0):",
           value = AEVP0,
           min = 0
         )
@@ -215,7 +215,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "ACVP0",
-          label = "Initial, infected, asymptomatic, previous current variant infection (ACVP0):",
+          label = "% Initial, infected, asymptomatic, previous current variant infection (ACVP0):",
           value = ACVP0,
           min = 0
         )
@@ -432,15 +432,15 @@ server <- function(session, input, output) {
     testfreq_EVP <- input$test_frequency_EVP
     testfreq_CVP <- input$test_frequency_CVP
     
-    nUNP <- input$nUNP
-    nVAXP <- input$nVAXP
-    nEVP <- input$nEVP
-    nCVP <- input$nCVP
+    nUNP <- input$nUNP * n
+    nVAXP <- input$nVAXP * n
+    nEVP <- input$nEVP * n
+    nCVP <- input$nCVP * n
     
-    AUNP0 <- input$AUNP0
-    AVAXP0 <- input$AVAXP0
-    AEVP0 <- input$AEVP0
-    ACVP0 <- input$ACVP0
+    AUNP0 <- input$AUNP0 * n
+    AVAXP0 <- input$AVAXP0 * n
+    AEVP0 <- input$AEVP0 * n
+    ACVP0 <- input$ACVP0 * n
     
     ncycles <- input$ncycles
     daysofincubation <- input$theta

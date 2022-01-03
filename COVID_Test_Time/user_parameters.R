@@ -1,15 +1,15 @@
 # Initial / Default Parameters
 n <- 25000
-nUNP <- 0.02 * n ### 2 % unprotected (previous U0)
+nUNP <- 0.02  ### 2 % unprotected (previous U0)
 # there are about 500 non-vaccinated + 2500 without boosters; consider these non-vaccinated
-nVAXP <- (1-0.02-0.15-0.125) * n #0.8*n  # vaccine protected (previous UVAXP0)
+nVAXP <- (1-0.02-0.15-0.125) #0.8*n  # vaccine protected (previous UVAXP0)
 
-nEVP <- 0.15*n # prior infection with earlier variants (previous UEVP0)
-nCVP <- 0.125 * n #0.125*n # prior infection with current variant (Omicron) (previous UCVP0)
+nEVP <- 0.15 # prior infection with earlier variants (previous UEVP0)
+nCVP <- 0.125  #0.125*n # prior infection with current variant (Omicron) (previous UCVP0)
 # # We did not have that many infections; based on 2000/100K weekly peak rate in the DC community
-AUNP0 <- 0.2* nUNP # asymptomatic, unprotected (previous A0)
-AVAXP0 <- 0.025*nVAXP # asymptomatic, vaccine protected
-AEVP0 <- 0.025*nEVP # asynptomatic, prior infection with earlier variants
+AUNP0 <- 0.2 * nUNP # asymptomatic, unprotected (previous A0)
+AVAXP0 <- 0.025 * nVAXP # asymptomatic, vaccine protected
+AEVP0 <- 0.025 * nEVP # asynptomatic, prior infection with earlier variants
 ACVP0 <- 0 # asymptomatic, prior infection with current variant (Omicron)
 
 # E0 <- 1/1000 * n # 0 #exposed, asymptomatic # JS: used 1/3 the DC prevalence
