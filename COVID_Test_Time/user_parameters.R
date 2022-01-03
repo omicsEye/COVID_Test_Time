@@ -40,9 +40,9 @@ daystoincubation <- 3
 daystorecovery <- 8
 percenttosymptoms <- 0.3
 fptouninfpool <- 1
-percentfatality <- 0.0005
+percentfatality <- 0.0001
 R0 <- 3.7   ### reproduction rate # is 1.6 more realistic with masks, etc?
-ncycles <- 150
+ncycles <- 120
 
 epsilon_VAXi0 <- 0.7 # 0.85 # assuming boosted (55-80 against symptomatic - reduced by 10% for actual infection)
 epsilon_VAXi6m <- 0.4 # 0.66 # (taking the low range of booster; get true number from 10 weeks study)
@@ -60,17 +60,17 @@ epsilon_CVt0 <- 1
 epsilon_CVt6m <- 0.6 # 1
 
 freqShock <- 1
-Xshock <- 0.01*n # JS: This is more realistic than 5 for 25,000
+Xshock <- 0.005*n # JS: This is more realistic than 5 for 25,000
 testfreq_UNP <- 7.0
-testfreq_VAXP <- 7.0
-testfreq_EVP <- 7.0
-testfreq_CVP <- 7.0
+testfreq_VAXP <- 14.0
+testfreq_EVP <- 14.0
+testfreq_CVP <- 14.0
 
 Se <- 0.99 # JS
 Sp <- 0.9999 # JS
 mu <- 1
 source("model.R", local = TRUE)
-results <- covidpred(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0, 
+results <- covidpred(n, nUNP *n, nVAXP*n, nEVP*n, nCVP*n, AUNP0*n, AVAXP0*n, AEVP0*n, ACVP0*n, 
             ncycles, daystoincubation, daystorecovery, percenttosymptoms,
             fptouninfpool, percentfatality, R0, 
             epsilon_VAXt0, epsilon_VAXt6m, epsilon_VAXi0, epsilon_VAXi6m,
