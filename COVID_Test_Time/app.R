@@ -24,406 +24,336 @@ ui <- fluidPage(
       h4("Planner inputs:"),
       width = 4,
       fluidRow(column(
-        width = 10,
+        width = 12,
         actionButton(
           
           inputId = "resetinput",
           label = "Reset all to default")
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "n",
-          label = "n:",
+          label = "population size (n):",
           value = n,
           min = 1
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "test_frequency",
-          label = "test_frequency (one every ? days):",
-          value = test_frequency,
+          inputId = "test_frequency_UNP",
+          label = "test_frequency for unprotected (one every ? days):",
+          value = testfreq_UNP,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
+        numericInput(
+          "num",
+          inputId = "test_frequency_VAXP",
+          label = "test_frequency for vaccinated (one every ? days):",
+          value = testfreq_VAXP,
+          min = 0
+        )
+      )),
+      fluidRow(column(
+        width = 12,
+        numericInput(
+          "num",
+          inputId = "test_frequency_EVP",
+          label = "test_frequency for exposed to older variants (one every ? days):",
+          value = testfreq_EVP,
+          min = 0
+        )
+      )),
+      fluidRow(column(
+        width = 12,
+        numericInput(
+          "num",
+          inputId = "test_frequency_CVP",
+          label = "test_frequency for exposed to current variant (one every ? days):",
+          value = testfreq_CVP,
+          min = 0
+        )
+      )),
+      fluidRow(column(
+        width = 12,
         numericInput(
           "num",
           inputId = "theta",
-          label = "theta:",
-          value = theta,
+          label = "Days to incubation (Exposed-->Asymptomatic):",
+          value = daystoincubation,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "sigma",
-          label = "sigma:",
-          value = sigma,
+          label = "Percent symptoms (Assymptomatic-->Symptomatic):",
+          value = percenttosymptoms,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",   
           inputId = "rho",
-          label = "rho:",
-          value = rho,
+          label = "Days to recovery",
+          value = daystorecovery,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "ncycles",
-          label = "ncycles:",
-          value = 120,
+          inputId = "mu",
+          label = "Return of FPs to the Uninfected pool (days):",
+          value = fptouninfpool,
           min = 0
         )
       )),
-      h4("Imported infections:"),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "freqShock",
-          label = "freqShock:",
-          value = freqShock,
+          inputId = "delta",
+          label = "Percent fatality rate:",
+          value = percentfatality,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "Xshock",
-          label = "Xshock:",
+          label = "Weekly number of inmported infections (Xshock):",
           value = Xshock,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "E0",
-          label = "E0:",
-          value = E0,
+          inputId = "nUNP",
+          label = "Number of unprotected (nUNP):",
+          value = nUNP,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "A0",
-          label = "A0:",
-          value = A0,
+          inputId = "nVAXP",
+          label = "Number of fully vaccinated (nVAXP):",
+          value = nVAXP,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "M0",
-          label = "M0:",
-          value = M0,
+          inputId = "nEVP",
+          label = "Number previously infected with older variants (nEVP):",
+          value = nEVP,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "TP0",
-          label = "TP0:",
-          value = TP0,
+          inputId = "nCVP",
+          label = "Number previously infected with current variant (nCVP):",
+          value = nCVP,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "FP0",
-          label = "FP0:",
-          value = FP0,
-          min = 0
-        )
-      )),
-
-      fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "EVAXP0",
-          label = "EVAXP0:",
-          value = EVAXP0,
+          inputId = "AUNP0",
+          label = "Initial infected, asymptomatic, unprotected (AUNP0)",
+          value = AUNP0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "AVAXP0",
-          label = "AVAXP0:",
+          label = "Initial infected, asymptomatic, vaccinated (AVAXP0)",
           value = AVAXP0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "TPVAXP0",
-          label = "TPVAXP0:",
-          value = TPVAXP0,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "FPVAXP0",
-          label = "FPVAXP0:",
-          value = FPVAXP0,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "EEVP0",
-          label = "EEVP0:",
-          value = EEVP0,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "AEVP0",
-          label = "AEVP0:",
+          label = "Initial, infected, asymptomatic, previous older variant infection (AEVP0):",
           value = AEVP0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "TPEVP0",
-          label = "TPEVP0:",
-          value = TPEVP0,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "FPEVP0",
-          label = "FPEVP0:",
-          value = FPEVP0,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "ECVP0",
-          label = "ECVP0:",
-          value = ECVP0,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "ACVP0",
-          label = "ACVP0:",
+          label = "Initial, infected, asymptomatic, previous current variant infection (ACVP0):",
           value = ACVP0,
           min = 0
         )
       )),
+
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "TPCVP0",
-          label = "TPCVP0:",
-          value = TPCVP0,
+          inputId = "R0",
+          label = "R0:",
+          value = R0,
           min = 0
         )
       )),
+
       fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "FPCVP0",
-          label = "FPCVP0:",
-          value = FPCVP0,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "Rstar",
-          label = "Rstar:",
-          value = Rstar,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
-        numericInput(
-          "num",
-          inputId = "delta",
-          label = "delta:",
-          value = delta,
-          min = 0
-        )
-      )),
-      fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_VAXi0",
-          label = "epsilon_VAXi0:",
+          label = "Preventive efficacy for infection at t0 (epsilon_VAXi0):",
           value = epsilon_VAXi0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_VAXi6m",
-          label = "epsilon_VAXi6m:",
+          label = "Preventive efficacy for infection from vaccine at 6M (epsilon_VAXi6m):",
           value = epsilon_VAXi6m,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_VAXt0",
-          label = "epsilon_VAXt0:",
+          label = "Preventive efficacy for transmission from vaccine at t0 (epsilon_VAXt0):",
           value = epsilon_VAXt0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_VAXt6m",
-          label = "epsilon_VAXt6m:",
+          label = "Preventive efficacy for transmission from vaccine at 6M (epsilon_VAXt6m):",
           value = epsilon_VAXt6m,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_EVi0",
-          label = "epsilon_EVi0:",
+          label = "Preventive efficacy for infection from past older variants at t0 (epsilon_EVi0):",
           value = epsilon_EVi0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_EVi6m",
-          label = "epsilon_EVi6m:",
+          label = "Preventive efficacy for infection from past older variants at 6M (epsilon_EVi6)::",
           value = epsilon_EVi6m,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_EVt0",
-          label = "epsilon_EVt0:",
+          label = "Preventive efficacy for transmission from past older variants at t0 (epsilon_EVt0):",
           value = epsilon_EVt0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_EVt6m",
-          label = "epsilon_EVt6m:",
+          label = "Preventive efficacy for transmission from past older variants at 6M (epsilon_EVt6m):",
           value = epsilon_EVt6m,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_CVi0",
-          label = "epsilon_CVi0:",
+          label = "Preventive efficacy for infection from past current variants at t0 (epsilon_CVi0):",
           value = epsilon_CVi0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_CVi6m",
-          label = "epsilon_CVi6m:",
+          label = "Preventive efficacy for infection from past current variants at 6M (epsilon_CVi6m):",
           value = epsilon_CVi6m,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_CVt0",
-          label = "epsilon_CVt0:",
+          label = "Preventive efficacy for transmission from past older variants at t0 (epsilon_CVt0):",
           value = epsilon_CVt0,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "epsilon_CVt6m",
-          label = "epsilon_CVt6m:",
+          label = "Preventive efficacy for transmission from older variants at 6M (epsilon_CVt6m):",
           value = epsilon_CVt6m,
           min = 0
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "Se",
@@ -433,7 +363,7 @@ ui <- fluidPage(
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
           inputId = "Sp",
@@ -443,12 +373,12 @@ ui <- fluidPage(
         )
       )),
       fluidRow(column(
-        width = 10,
+        width = 12,
         numericInput(
           "num",
-          inputId = "mu",
-          label = "mu:",
-          value = mu,
+          inputId = "ncycles",
+          label = "Number of cycles:",
+          value = 120,
           min = 0
         )
       ))
@@ -497,125 +427,82 @@ server <- function(session, input, output) {
   
   read_input <- function() {
     n <- input$n
-    E0 <- input$E0
-    A0 <- input$A0
-    U0 <- 0.025 * n - A0
-    M0 <- input$M0
-    TP0 <- input$TP0
-    FP0 <- input$FP0
-    UVAXP0 <- 0.8 * n
-    EVAXP0 <- input$EVAXP0
-    AVAXP0 <- input$AVAXP0
-    TPVAXP0 <- input$TPVAXP0
-    FPVAXP0 <- input$FPVAXP0
-    UEVP0 <- 0.05 * n
-    EEVP0 <- input$EEVP0
-    AEVP0 <- input$AEVP0
-    TPEVP0 <- input$TPEVP0
-    FPEVP0 <- input$FPEVP0
-    UCVP0 <- 0.125 * n
-    ECVP0 <- input$ECVP0
-    ACVP0 <- input$ACVP0
-    TPCVP0 <- input$TPCVP0
-    FPCVP0 <- input$FPCVP0
+   testfreq_UNP <- input$test_frequency_UNP
+   testfreq_VAXP <- input$test_frequency_VAXP
+   testfreq_EVP <- input$test_frequency_EVP
+   testfreq_CVP <- input$test_frequency_CVP
+   
+   nUNP <- input$nUNP
+   nVAXP <- input$nVAXP
+   nEVP <- input$nEVP
+   nCVP <- input$nCVP
+   
+   AUNP0 <- input$AUNP0
+   AVAXP0 <- input$AVAXP0
+   AEVP0 <- input$AEVP0
+   ACVP0 <- input$ACVP0
+   
+   ncycles <- input$ncycles
+   daysofincubation <- input$theta
+   percenttosymptoms <- input$sigma
+   daystorecovery <- input$rho
+   R0 <- input$R0 ### reproduction rate
+   # beta <- Rstar * (sigma + rho)
+   percentfatality <- input$delta
+   fptouninfpool <- input$mu
+   
+   epsilon_VAXi0 <- input$epsilon_VAXi0
+   epsilon_VAXi6m <- input$epsilon_VAXi6m
+   epsilon_VAXt0 <- input$epsilon_VAXt0
+   epsilon_VAXt6m <- input$epsilon_VAXt6m
+   
+   epsilon_EVi0 <- input$epsilon_EVi0
+   epsilon_EVi6m <- input$epsilon_EVi6m
+   epsilon_EVt0 <- input$epsilon_EVt0
+   epsilon_EVt6m <- input$epsilon_EVt6m
+   
+   epsilon_CVi0 <- input$epsilon_CVi0
+   epsilon_CVi6m <- input$epsilon_CVi6m
+   epsilon_CVt0 <- input$epsilon_CVt0
+   epsilon_CVt6m <- input$epsilon_CVt6m
+   
 
-    ncycles <- input$ncycles
-    theta <- input$theta
-    sigma <- input$sigma
-    rho <- input$rho
-    Rstar <- input$Rstar ### reproduction rate
-    beta <- Rstar * (sigma + rho)
-    delta <- input$delta
-    epsilon_VAXi0 <- input$epsilon_VAXi0
-    epsilon_VAXi6m <- input$epsilon_VAXi6m
-    epsilon_VAXt0 <- input$epsilon_VAXt0
-    epsilon_VAXt6m <- input$epsilon_VAXt6m
-
-    epsilon_EVi0 <- input$epsilon_EVi0
-    epsilon_EVi6m <- input$epsilon_EVi6m
-    epsilon_EVt0 <- input$epsilon_EVt0
-    epsilon_EVt6m <- input$epsilon_EVt6m
-
-    epsilon_CVi0 <- input$epsilon_CVi0
-    epsilon_CVi6m <- input$epsilon_CVi6m
-    epsilon_CVt0 <- input$epsilon_CVt0
-    epsilon_CVt6m <- input$epsilon_CVt6m
-
-    freqShock <- input$freqShock
+   
+    freqShock <- freqShock
     Xshock <- input$Xshock
     #test_frequency <- input$test_frequency
-    number_of_tests <- input$ncycles / input$test_frequency
-    tau <- 1.0 / number_of_tests ### weekly testing
-    tau_VAXP <- 1.0 / number_of_tests
-    tau_EVP <- 1.0 / number_of_tests
-    tau_CVP <- 1.0 / number_of_tests
+    # number_of_tests <- input$ncycles / input$test_frequency
+    # testfreq_UNP <- 1.0 / number_of_tests ### weekly testing
+    # testfreq_VAXP <- 1.0 / number_of_tests
+    # testfreq_EVP <- 1.0 / number_of_tests
+    # testfreq_CVP <- 1.0 / number_of_tests
     Se <- input$Se
     Sp <- input$Sp
-    mu <- input$mu
+    # mu <- input$mu
 
     prediction_results <- covidpred(
-      U0,
-      E0,
-      A0,
-      M0,
-      TP0,
-      FP0,
-      UVAXP0,
-      EVAXP0,
-      AVAXP0,
-      TPVAXP0,
-      FPVAXP0,
-      UEVP0,
-      EEVP0,
-      AEVP0,
-      TPEVP0,
-      FPEVP0,
-      UCVP0,
-      ECVP0,
-      ACVP0,
-      TPCVP0,
-      FPCVP0,
-      ncycles,
-      beta,
-      epsilon_VAXt0,
-      epsilon_VAXt6m,
-      epsilon_VAXi0,
-      epsilon_VAXi6m,
-      epsilon_EVt0,
-      epsilon_EVt6m,
-      epsilon_EVi0,
-      epsilon_EVi6m,
-      epsilon_CVt0,
-      epsilon_CVt6m,
-      epsilon_CVi0,
-      epsilon_CVi6m,
-      freqShock,
-      Xshock,
-      tau,
-      tau_VAXP,
-      tau_EVP,
-      tau_CVP,
-      Se,
-      Sp,
-      mu,
-      theta,
-      sigma,
-      rho,
-      delta
-    )
+      n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0, 
+      ncycles, daystoincubation, daystorecovery, percenttosymptoms,
+      fptouninfpool, percentfatality, R0, 
+      epsilon_VAXt0, epsilon_VAXt6m, epsilon_VAXi0, epsilon_VAXi6m,
+      epsilon_EVt0, epsilon_EVt6m, epsilon_EVi0, epsilon_EVi6m,
+      epsilon_CVt0, epsilon_CVt6m, epsilon_CVi0, epsilon_CVi6m,
+      freqShock, Xshock, testfreq_UNP, testfreq_VAXP, testfreq_EVP, testfreq_CVP,
+      Se, Sp)
     results <- list()
     results$Data <- as.data.frame(prediction_results)
     results$n<- n
     results$ncycles <- ncycles
     return(results)
   }
+  isolate(print(read_input()))
   output$accumlative <- renderPlotly({
     results <-  read_input()
     results_data <- results$Data
     ggplotly(
       ggplot2::ggplot(results_data,
                     aes(x=seq(rownames(results_data)),
-                        y=M + FP + TP + TPCVP + TPEVP + TPVAXP + FPVAXP + FPEVP + FPCVP)) +
+                        y=M + FPVAXP + TPVAXP + TPCVP + TPEVP + FPEVP + FPCVP)) +
       ggplot2::geom_line() +
       ggplot2::geom_hline(yintercept = 0,
                           color = "red",
