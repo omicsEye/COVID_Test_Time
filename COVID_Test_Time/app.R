@@ -135,7 +135,7 @@ ui <- fluidPage(
         numericInput(
           "num",
           inputId = "Xshock",
-          label = "Daily number of inmported infections (Xshock):",
+          label = "Daily number of inported infections (Xshock):",
           value = Xshock,
           min = 0
         )
@@ -220,7 +220,7 @@ ui <- fluidPage(
           min = 0
         )
       )),
-
+      
       fluidRow(column(
         width = 12,
         numericInput(
@@ -231,7 +231,7 @@ ui <- fluidPage(
           min = 0
         )
       )),
-
+      
       fluidRow(column(
         width = 12,
         numericInput(
@@ -388,7 +388,7 @@ ui <- fluidPage(
               tabsetPanel(
                 tabPanel("Cumulative on isolation", plotlyOutput(outputId = "accumlative")),
                 tabPanel("New infected", plotlyOutput(outputId = "newInf")),
-                 tabPanel("Output Data Frame", DT::dataTableOutput("results"))
+                tabPanel("Output Data Frame", DT::dataTableOutput("results"))
                 #tabPanel("plot", plotOutput(outputId = "distPlot"))
               ))
   )
@@ -427,47 +427,47 @@ server <- function(session, input, output) {
   
   read_input <- function() {
     n <- input$n
-   testfreq_UNP <- input$test_frequency_UNP
-   testfreq_VAXP <- input$test_frequency_VAXP
-   testfreq_EVP <- input$test_frequency_EVP
-   testfreq_CVP <- input$test_frequency_CVP
-   
-   nUNP <- input$nUNP
-   nVAXP <- input$nVAXP
-   nEVP <- input$nEVP
-   nCVP <- input$nCVP
-   
-   AUNP0 <- input$AUNP0
-   AVAXP0 <- input$AVAXP0
-   AEVP0 <- input$AEVP0
-   ACVP0 <- input$ACVP0
-   
-   ncycles <- input$ncycles
-   daysofincubation <- input$theta
-   percenttosymptoms <- input$sigma
-   daystorecovery <- input$rho
-   R0 <- input$R0 ### reproduction rate
-   # beta <- Rstar * (sigma + rho)
-   percentfatality <- input$delta
-   fptouninfpool <- input$mu
-   
-   epsilon_VAXi0 <- input$epsilon_VAXi0
-   epsilon_VAXi6m <- input$epsilon_VAXi6m
-   epsilon_VAXt0 <- input$epsilon_VAXt0
-   epsilon_VAXt6m <- input$epsilon_VAXt6m
-   
-   epsilon_EVi0 <- input$epsilon_EVi0
-   epsilon_EVi6m <- input$epsilon_EVi6m
-   epsilon_EVt0 <- input$epsilon_EVt0
-   epsilon_EVt6m <- input$epsilon_EVt6m
-   
-   epsilon_CVi0 <- input$epsilon_CVi0
-   epsilon_CVi6m <- input$epsilon_CVi6m
-   epsilon_CVt0 <- input$epsilon_CVt0
-   epsilon_CVt6m <- input$epsilon_CVt6m
-   
-
-   
+    testfreq_UNP <- input$test_frequency_UNP
+    testfreq_VAXP <- input$test_frequency_VAXP
+    testfreq_EVP <- input$test_frequency_EVP
+    testfreq_CVP <- input$test_frequency_CVP
+    
+    nUNP <- input$nUNP
+    nVAXP <- input$nVAXP
+    nEVP <- input$nEVP
+    nCVP <- input$nCVP
+    
+    AUNP0 <- input$AUNP0
+    AVAXP0 <- input$AVAXP0
+    AEVP0 <- input$AEVP0
+    ACVP0 <- input$ACVP0
+    
+    ncycles <- input$ncycles
+    daysofincubation <- input$theta
+    percenttosymptoms <- input$sigma
+    daystorecovery <- input$rho
+    R0 <- input$R0 ### reproduction rate
+    # beta <- Rstar * (sigma + rho)
+    percentfatality <- input$delta
+    fptouninfpool <- input$mu
+    
+    epsilon_VAXi0 <- input$epsilon_VAXi0
+    epsilon_VAXi6m <- input$epsilon_VAXi6m
+    epsilon_VAXt0 <- input$epsilon_VAXt0
+    epsilon_VAXt6m <- input$epsilon_VAXt6m
+    
+    epsilon_EVi0 <- input$epsilon_EVi0
+    epsilon_EVi6m <- input$epsilon_EVi6m
+    epsilon_EVt0 <- input$epsilon_EVt0
+    epsilon_EVt6m <- input$epsilon_EVt6m
+    
+    epsilon_CVi0 <- input$epsilon_CVi0
+    epsilon_CVi6m <- input$epsilon_CVi6m
+    epsilon_CVt0 <- input$epsilon_CVt0
+    epsilon_CVt6m <- input$epsilon_CVt6m
+    
+    
+    
     freqShock <- freqShock
     Xshock <- input$Xshock
     #test_frequency <- input$test_frequency
@@ -479,7 +479,7 @@ server <- function(session, input, output) {
     Se <- input$Se
     Sp <- input$Sp
     # mu <- input$mu
-
+    
     prediction_results <- covidpred(
       n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0, 
       ncycles, daystoincubation, daystorecovery, percenttosymptoms,
@@ -501,15 +501,16 @@ server <- function(session, input, output) {
     results_data <- results$Data
     ggplotly(
       ggplot2::ggplot(results_data,
-                    aes(x=seq(rownames(results_data)),
-                        y=M + FPVAXP + TPVAXP + TPCVP + TPEVP + FPEVP + FPCVP)) +
-      ggplot2::geom_line() +
-      ggplot2::geom_hline(yintercept = 0,
-                          color = "red",
-                          size = 0.1) +
-      ggplot2::xlab ("Days") +
-      ggplot2::ylab ("Total number of individuals in isolation") +
-      ggplot2::ggtitle ("Total number of indivituals in isolation each day") # +
+                      aes(x=seq(rownames(results_data)),
+                          y=M + FPVAXP + TPVAXP + TPCVP + TPEVP + FPEVP + FPCVP)) +
+        ggplot2::geom_line() +
+        ggplot2::geom_abline(slope=0,intercept=300,col='red') +
+        ggplot2::geom_hline(yintercept = 0,
+                            color = "red",
+                            size = 0.1) +
+        ggplot2::xlab ("Days") +
+        ggplot2::ylab ("Total number of individuals in isolation") +
+        ggplot2::ggtitle ("Total number of individuals in isolation each day") # +
       # theme_omicsEye_presentation())
     )
   })
@@ -518,23 +519,23 @@ server <- function(session, input, output) {
     results_data <- results$Data
     p <- ggplot2::ggplot(results_data, aes(
       x=seq(rownames(results_data)), y=newinf)) + # *results$n/100)) +  # i think newinf is actual number of new infections
-        ggplot2::geom_line() +
-        ggplot2::geom_hline(yintercept = 0,
-                            color = "red",
-                            size = 0.1) +
-        ggplot2::xlab ("Days") +
-        # ggplot2::ylab ("newinf*n/100") +
-        ggplot2::ylab('Number of new infections per day') +
-        ggplot2::ggtitle ("Newly infected indivituals") 
-      # theme_omicsEye_presentation()
-      ggplotly(p)
+      ggplot2::geom_line() +
+      ggplot2::geom_hline(yintercept = 0,
+                          color = "red",
+                          size = 0.1) +
+      ggplot2::xlab ("Days") +
+      # ggplot2::ylab ("newinf*n/100") +
+      ggplot2::ylab('Number of new infections per day') +
+      ggplot2::ggtitle ("Newly infected individuals") 
+    # theme_omicsEye_presentation()
+    ggplotly(p)
   })
   output$results <- DT::renderDataTable({
     results <-  read_input()
     results_data <- results$Data
     DT::datatable(results_data, options = list(lengthMenu = c(10, 30, results$ncycles), pageLength = 5))
   })
-
+  
 }
 
 shinyApp(ui = ui, server = server)

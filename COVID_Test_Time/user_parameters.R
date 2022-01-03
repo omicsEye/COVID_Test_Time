@@ -41,7 +41,7 @@ percenttosymptoms <- 0.3
 fptouninfpool <- 1
 percentfatality <- 0.0005
 R0 <- 3.7   ### reproduction rate # is 1.6 more realistic with masks, etc?
-ncycles <- 10
+ncycles <- 150
 
 epsilon_VAXi0 <- 0.7 # 0.85 # assuming boosted (55-80 against symptomatic - reduced by 10% for actual infection)
 epsilon_VAXi6m <- 0.4 # 0.66 # (taking the low range of booster; get true number from 10 weeks study)
