@@ -502,7 +502,7 @@ server <- function(session, input, output) {
     ggplotly(
       ggplot2::ggplot(results_data,
                       aes(x=seq(rownames(results_data)),
-                          y=M + FPVAXP + TPVAXP + TPCVP + TPEVP + FPEVP + FPCVP)) +
+                          y=M + FPVAXP + TPVAXP + TPCVP + TPEVP + FPEVP + FPCVP + TPUNP + FPUNP)) +
         ggplot2::geom_line() +
         ggplot2::geom_abline(slope=0,intercept=300,col='red') +
         ggplot2::geom_hline(yintercept = 0,
