@@ -59,7 +59,7 @@ epsilon_CVt0 <- 1
 epsilon_CVt6m <- 0.6 # 1
 
 freqShock <- 1
-Xshock <- .125*n # JS: This is more realistic than 5 for 25,000
+Xshock <- 0.01*n # JS: This is more realistic than 5 for 25,000
 testfreq_UNP <- 7.0
 testfreq_VAXP <- 7.0
 testfreq_EVP <- 7.0
