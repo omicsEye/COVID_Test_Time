@@ -4,7 +4,7 @@ nUNP <- 0.02*n ### 2 % unprotected (previous U0)
 nVAXP <- (1-3/25) * n #0.8*n  # vaccine protected (previous UVAXP0)
 # there are about 500 non-vaccinated + 2500 without boosters; consider these non-vaccinated
 nEVP <- 0.05*n # prior infection with earlier variants (previous UEVP0)
-nCVP <- 0.02 * n #0.125*n # prior infection with current variant (Omicron) (previous UCVP0)
+nCVP <- 0.125 * n #0.125*n # prior infection with current variant (Omicron) (previous UCVP0)
 # # We did not have that many infections; based on 2000/100K weekly peak rate in the DC community
 AUNP0 <- 0.2* nUNP # asymptomatic, unprotected (previous A0)
 AVAXP0 <- 0.025*nVAXP # asymptomatic, vaccine protected
@@ -59,7 +59,7 @@ epsilon_CVt0 <- 1
 epsilon_CVt6m <- 0.6 # 1
 
 freqShock <- 1
-Xshock <- 25 # JS: This is more realistic than 5 for 25,000; should we use the current incidence (~0.3%)
+Xshock <- .125*n # JS: This is more realistic than 5 for 25,000
 testfreq_UNP <- 7.0
 testfreq_VAXP <- 7.0
 testfreq_EVP <- 7.0
