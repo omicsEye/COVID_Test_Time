@@ -577,7 +577,7 @@ output$accumlative <- renderPlotly({
     ggplot2::ggplot(results,
                     aes(x=day,
                         y=inisolation)) +
-      ggplot2::geom_line() +
+      ggplot2::geom_line(size = .5) +
       ggplot2::geom_abline(slope=0,intercept=300, col='red', size = .25) +
       ggplot2::geom_hline(yintercept = 0,
                           color = "black",
@@ -593,7 +593,7 @@ output$newInf <- renderPlotly({
   results[,day:=.I]
   p <- ggplot2::ggplot(results, aes(
     x=day, y=newinf)) + # *results$n/100)) +  # i think newinf is actual number of new infections
-    ggplot2::geom_line() +
+    ggplot2::geom_line(size = 0.5) +
     ggplot2::geom_hline(yintercept = 0,
                         color = "black",
                         size = 0.1) +
@@ -632,8 +632,8 @@ output$customplot <- renderPlotly({
   )]
   ggplotly(
     ggplot(dt,aes(get(input$xfield),get(input$yfield),label=xfield))+geom_line(method = "glm",
-                                                                               size = .75,
-                                                                               color = 'blue',alpha = .9,)+
+                                                                               size = .5,
+                                                                               color = 'black',alpha = .75,)+
                                                                       geom_point(fill = 'darkolivegreen4',
                                                                                             color = 'black',
                                                                                             alpha = .5,
