@@ -5,7 +5,7 @@ theme_omicsEye_presentation <- function()
     cowplot::theme_cowplot(),
     ggplot2::theme(
       text               = ggplot2::element_text(size = 12),
-      axis.text          = ggplot2::element_text(size = 7),
+      axis.text          = ggplot2::element_text(size = 9),
       axis.title.x       = ggplot2::element_text(margin = ggplot2::margin(1, 0, 0.5, 0)),
       axis.title.x.top   = ggplot2::element_text(margin = ggplot2::margin(0, 0, 2, 0)),
       axis.title.y       = ggplot2::element_text(margin = ggplot2::margin(0, 1, 0, 0.5)),

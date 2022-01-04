@@ -13,7 +13,7 @@ ui <- fluidPage(
   tags$head(
     tags$style(
       type = "text/css",
-      "label{ display: table-cell; text-align: left; vertical-align: top; font-size:95%;
+      "label{ display: table-cell; text-align: left; vertical-align: top; font-size:90%;
       font-weight:bold; white-space: normal;}
 "
     )
@@ -30,7 +30,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         actionButton(
-          
+
           inputId = "resetinput",
           label = "Reset all to default")
       )),
@@ -38,7 +38,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "n",
           label = "Population size (n):",
           value = n,
@@ -48,7 +48,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
           numericInput(
-            
+
             inputId = "test_frequency_UNP",
             label = "Test frequency for unprotected (one every ? days):",
             value = testfreq_UNP,
@@ -58,7 +58,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "test_frequency_VAXP",
           label = "Test frequency for vaccinated \n(one every ? days):",
           value = testfreq_VAXP,
@@ -68,7 +68,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "test_frequency_EVP",
           label = "Test frequency for exposed to \nolder variants (one every ? days):",
           value = testfreq_EVP,
@@ -78,7 +78,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "test_frequency_CVP",
           label = "Test frequency for exposed to \ncurrent variant (one every ? days):",
           value = testfreq_CVP,
@@ -88,7 +88,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "theta",
           label = "Days to incubation \n(Exposed-->Asymptomatic):",
           value = daystoincubation,
@@ -98,7 +98,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "sigma",
           label = "% symptoms \n(Assymptomatic-->Symptomatic):",
           value = percenttosymptoms,
@@ -108,7 +108,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-             
+
           inputId = "rho",
           label = "Days to recovery",
           value = daystorecovery,
@@ -118,7 +118,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "mu",
           label = "Return of FPs to \nthe Uninfected pool (days):",
           value = fptouninfpool,
@@ -128,7 +128,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "delta",
           label = "% fatality rate:",
           value = percentfatality,
@@ -138,7 +138,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "Xshock",
           label = "Daily number of \ninported infections (Xshock):",
           value = Xshock,
@@ -148,7 +148,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "nUNP",
           label = "% unprotected (nUNP):",
           value = nUNP,
@@ -158,7 +158,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "nVAXP",
           label = "% fully vaccinated (nVAXP):",
           value = nVAXP,
@@ -168,7 +168,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "nEVP",
           label = "% previously infected with \nolder variants (nEVP):",
           value = nEVP,
@@ -178,7 +178,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "nCVP",
           label = "% previously infected with \ncurrent variant (nCVP):",
           value = nCVP,
@@ -188,7 +188,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "AUNP0",
           label = "Initial % infected, \nasymptomatic, unprotected (AUNP0)",
           value = AUNP0,
@@ -198,7 +198,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "AVAXP0",
           label = "Initial % infected, \nasymptomatic, vaccinated (AVAXP0)",
           value = AVAXP0,
@@ -208,7 +208,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "AEVP0",
           label = "% Initial, infected, asymptomatic, \nprevious older variant infection (AEVP0):",
           value = AEVP0,
@@ -218,29 +218,29 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "ACVP0",
           label = "% Initial, infected, asymptomatic, \nprevious current variant infection (ACVP0):",
           value = ACVP0,
           min = 0,max=1,step=0.1
         )
       )),
-      
+
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "R0",
           label = "R0:",
           value = R0,
           min = 0,step=0.2
         )
       )),
-      
+
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_VAXi0",
           label = "Preventive efficacy for infection \nat t0 (epsilon_VAXi0):",
           value = epsilon_VAXi0,
@@ -250,7 +250,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_VAXi6m",
           label = "Preventive efficacy for infection \nfrom vaccine at 6M (epsilon_VAXi6m):",
           value = epsilon_VAXi6m,
@@ -260,7 +260,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_VAXt0",
           label = "Preventive efficacy for transmission \nfrom vaccine at t0 (epsilon_VAXt0):",
           value = epsilon_VAXt0,
@@ -270,7 +270,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_VAXt6m",
           label = "Preventive efficacy for transmission \nfrom vaccine at 6M (epsilon_VAXt6m):",
           value = epsilon_VAXt6m,
@@ -280,7 +280,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_EVi0",
           label = "Preventive efficacy for infection \nfrom past older variants at t0 (epsilon_EVi0):",
           value = epsilon_EVi0,
@@ -290,7 +290,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_EVi6m",
           label = "Preventive efficacy for infection \nfrom past older variants at 6M (epsilon_EVi6)::",
           value = epsilon_EVi6m,
@@ -300,7 +300,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_EVt0",
           label = "Preventive efficacy for transmission \nfrom past older variants at t0 (epsilon_EVt0):",
           value = epsilon_EVt0,
@@ -310,7 +310,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_EVt6m",
           label = "Preventive efficacy for transmission \nfrom past older variants at 6M (epsilon_EVt6m):",
           value = epsilon_EVt6m,
@@ -320,7 +320,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_CVi0",
           label = "Preventive efficacy for infection \nfrom past current variants at t0 (epsilon_CVi0):",
           value = epsilon_CVi0,
@@ -330,7 +330,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_CVi6m",
           label = "Preventive efficacy for infection \nfrom past current variants at 6M (epsilon_CVi6m):",
           value = epsilon_CVi6m,
@@ -340,7 +340,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_CVt0",
           label = "Preventive efficacy for transmission \nfrom past older variants at t0 (epsilon_CVt0):",
           value = epsilon_CVt0,
@@ -350,7 +350,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "epsilon_CVt6m",
           label = "Preventive efficacy for transmission \nfrom older variants at 6M (epsilon_CVt6m):",
           value = epsilon_CVt6m,
@@ -360,7 +360,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "Se",
           label = "Sensitivity:",
           value = Se,
@@ -370,7 +370,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "Sp",
           label = "Specificity:",
           value = Sp,
@@ -380,7 +380,7 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-          
+
           inputId = "ncycles",
           label = "Number of cycles:",
           value = ncycles,
@@ -394,7 +394,6 @@ ui <- fluidPage(
       tabsetPanel(
         tabPanel("Cumulative on isolation", plotlyOutput(outputId = "accumlative")),
         tabPanel("New infected", plotlyOutput(outputId = "newInf")),
-        tabPanel("Output Data Frame", DT::dataTableOutput("results")),
         tabPanel(
           "Custom plots",
           fluidPage(
@@ -434,7 +433,7 @@ ui <- fluidPage(
               column(
                 width = 4,
                 numericInput(
-                  
+
                   inputId = "lower",
                   label = "Select lower limit:",
                   value=0,
@@ -443,7 +442,7 @@ ui <- fluidPage(
               column(
                 width = 4,
                 numericInput(
-                  
+
                   inputId = "upper",
                   label = "Select upper limit:",
                   value=1000,
@@ -452,16 +451,16 @@ ui <- fluidPage(
               column(
                 width = 4,
                 numericInput(
-                  
+
                   inputId = "steps",
                   label = "Select number of steps:",
                   value=100,max=300,min=2
                 ))
             ), # end fluidRow
             fluidRow(plotlyOutput('customplot'))
-          ) # end fluidPage     
-        ) # end Custom plots tab
-        #tabPanel("plot", plotOutput(outputId = "distPlot"))
+          ) # end fluidPage
+        ), # end Custom plots tab
+        tabPanel("Output Data Frame", DT::dataTableOutput("results"))
       ) # end tabsetpanel
     ) # end Main panel
   ) # end pageWithSidebar
@@ -497,8 +496,8 @@ server <- function(session, input, output) {
     }
   })
   ### end JS code for reset defaults
-  
-  
+
+
 
     params <- reactive(list(
       n=input$n,
@@ -506,7 +505,7 @@ server <- function(session, input, output) {
       testfreq_VAXP=input$test_frequency_VAXP,
       testfreq_EVP=input$test_frequency_EVP,
       testfreq_CVP=input$test_frequency_CVP,
-      
+
       nUNP=input$nUNP,
       nVAXP=input$nVAXP,
       nEVP=input$nEVP,
@@ -515,7 +514,7 @@ server <- function(session, input, output) {
       AVAXP0=input$AVAXP0,
       AEVP0=input$AEVP0,
       ACVP0=input$ACVP0,
-      
+
       ncycles=input$ncycles,
       daystoincubation=input$theta,
       percenttosymptoms=input$sigma,
@@ -524,22 +523,22 @@ server <- function(session, input, output) {
       # beta <- Rstar * (sigma + rho)
       percentfatality=input$delta,
       fptouninfpool=input$mu,
-      
+
       epsilon_VAXi0=input$epsilon_VAXi0,
       epsilon_VAXi6m=input$epsilon_VAXi6m,
       epsilon_VAXt0=input$epsilon_VAXt0,
       epsilon_VAXt6m=input$epsilon_VAXt6m,
-      
+
       epsilon_EVi0=input$epsilon_EVi0,
       epsilon_EVi6m=input$epsilon_EVi6m,
       epsilon_EVt0=input$epsilon_EVt0,
       epsilon_EVt6m=input$epsilon_EVt6m,
-      
+
       epsilon_CVi0=input$epsilon_CVi0,
       epsilon_CVi6m=input$epsilon_CVi6m,
       epsilon_CVt0=input$epsilon_CVt0,
       epsilon_CVt6m=input$epsilon_CVt6m,
-      
+
       freqShock=freqShock,
       Xshock=input$Xshock,
       #test_frequency <- input$test_frequency
@@ -552,11 +551,11 @@ server <- function(session, input, output) {
       Sp=input$Sp
       # mu <- input$mu
     ))
-  
+
     #  prediction_results <- do.call(covidpred,params)
-    # # n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0, 
+    # # n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
     # ncycles, daystoincubation, daystorecovery, percenttosymptoms,
-    # fptouninfpool, percentfatality, R0, 
+    # fptouninfpool, percentfatality, R0,
     # epsilon_VAXt0, epsilon_VAXt6m, epsilon_VAXi0, epsilon_VAXi6m,
     # epsilon_EVt0, epsilon_EVt6m, epsilon_EVi0, epsilon_EVi6m,
     # epsilon_CVt0, epsilon_CVt6m, epsilon_CVi0, epsilon_CVi6m,
@@ -579,15 +578,14 @@ output$accumlative <- renderPlotly({
                     aes(x=day,
                         y=inisolation)) +
       ggplot2::geom_line() +
-      ggplot2::geom_abline(slope=0,intercept=300,col='red') +
+      ggplot2::geom_abline(slope=0,intercept=300, col='red', size = .25) +
       ggplot2::geom_hline(yintercept = 0,
-                          color = "red",
+                          color = "black",
                           size = 0.1) +
       ggplot2::xlab ("Days") +
       ggplot2::ylab ("Total number of individuals in isolation") +
-      ggplot2::ggtitle ("Total number of individuals in isolation each day")
-    # +
-    # theme_omicsEye_presentation())
+      ggplot2::ggtitle ("Total number of individuals in isolation each day") +
+      theme_omicsEye_presentation()
   )
 })
 output$newInf <- renderPlotly({
@@ -597,18 +595,18 @@ output$newInf <- renderPlotly({
     x=day, y=newinf)) + # *results$n/100)) +  # i think newinf is actual number of new infections
     ggplot2::geom_line() +
     ggplot2::geom_hline(yintercept = 0,
-                        color = "red",
+                        color = "black",
                         size = 0.1) +
     ggplot2::xlab ("Days") +
     # ggplot2::ylab ("newinf*n/100") +
     ggplot2::ylab('Number of new infections per day') +
-    ggplot2::ggtitle ("Newly infected individuals") 
-  # theme_omicsEye_presentation()
+    ggplot2::ggtitle ("Newly infected individuals") +
+    theme_omicsEye_presentation()
   ggplotly(p)
 })
 output$results <- DT::renderDataTable({
   results <-  do.call(covidpred,params())
-  DT::datatable(results_data, options = list(lengthMenu = c(10, 30, params()$ncycles), pageLength = 5))
+  DT::datatable(results, options = list(lengthMenu = c(10, 30, params()$ncycles), pageLength = 5))
 })
 
 output$customplot <- renderPlotly({
@@ -624,7 +622,7 @@ output$customplot <- renderPlotly({
       fun = 'which.max'
     }
     yi <- tmp[,.(y=get(input$yfield))][,.(y=get(fun)(y))]$y
-    dt[x==i,y:=yi] 
+    dt[x==i,y:=yi]
   }
   setnames(dt,c('x','y'),c(input$xfield,input$yfield))
   # print(dt)
@@ -633,9 +631,17 @@ output$customplot <- renderPlotly({
     fun,' of ', input$yfield, " = ", round(get(input$yfield),1)
   )]
   ggplotly(
-    ggplot(dt,aes(get(input$xfield),get(input$yfield),label=xfield))+geom_line()+geom_point()+
+    ggplot(dt,aes(get(input$xfield),get(input$yfield),label=xfield))+geom_line(method = "glm",
+                                                                               size = .75,
+                                                                               color = 'blue',alpha = .9,)+
+                                                                      geom_point(fill = 'darkolivegreen4',
+                                                                                            color = 'black',
+                                                                                            alpha = .5,
+                                                                                            shape = 21,
+                                                                                            size = 1.75,
+                                                                                            stroke = 0.25)+
       xlab(input$xfield)+
-      ylab(paste("Function:",fun,"of",input$yfield)),
+      ylab(paste("Function:",fun,"of",input$yfield)) + theme_omicsEye_presentation(),
     tooltip=c('label')
   )
 }) # end customplot
