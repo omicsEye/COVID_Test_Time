@@ -70,15 +70,19 @@ Se <- 0.99 # JS
 Sp <- 0.9999 # JS
 mu <- 1
 source("model.R", local = TRUE)
-results <- covidpred(n, nUNP *n, nVAXP*n, nEVP*n, nCVP*n, AUNP0*n, AVAXP0*n, AEVP0*n, ACVP0*n, 
-            ncycles, daystoincubation, daystorecovery, percenttosymptoms,
-            fptouninfpool, percentfatality, R0, 
-            epsilon_VAXt0, epsilon_VAXt6m, epsilon_VAXi0, epsilon_VAXi6m,
-            epsilon_EVt0, epsilon_EVt6m, epsilon_EVi0, epsilon_EVi6m,
-            epsilon_CVt0, epsilon_CVt6m, epsilon_CVi0, epsilon_CVi6m,
-            freqShock, Xshock, testfreq_UNP, testfreq_VAXP, testfreq_EVP, testfreq_CVP,
-            Se, Sp)
-results <- data.table(results)
-results[,plot(.I,newinf,type='l')]
+params <- list(n=n, nUNP=nUNP, nVAXP=nVAXP, nEVP=nEVP, nCVP=nCVP, AUNP0=AUNP0, AVAXP0=AVAXP0, AEVP0=AEVP0,
+               ACVP0=ACVP0, ncycles=ncycles, daystoincubation=daystoincubation, daystorecovery=daystorecovery, 
+               percenttosymptoms=percenttosymptoms,
+               fptouninfpool=fptouninfpool, percentfatality=percentfatality, R0=R0, 
+               epsilon_VAXt0=epsilon_VAXt0, epsilon_VAXt6m=epsilon_VAXt6m, epsilon_VAXi0=epsilon_VAXi0, 
+               epsilon_VAXi6m=epsilon_VAXi6m,
+               epsilon_EVt0=epsilon_EVt0, epsilon_EVt6m=epsilon_EVt6m, epsilon_EVi0=epsilon_EVi0, 
+               epsilon_EVi6m=epsilon_EVi6m,
+               epsilon_CVt0=epsilon_CVt0, epsilon_CVt6m=epsilon_CVt6m, epsilon_CVi0=epsilon_CVi0,
+               epsilon_CVi6m=epsilon_CVi6m,freqShock=freqShock, Xshock=Xshock, testfreq_UNP=testfreq_UNP, 
+               testfreq_VAXP=testfreq_VAXP, testfreq_EVP=testfreq_EVP, testfreq_CVP=testfreq_CVP,
+               Se=Se, Sp=Sp)
+results <- data.table(do.call(covidpred,params))
+results[,plot(.I,inisolation,type='l')]
 
 #plot(results$newinf, results$TP)

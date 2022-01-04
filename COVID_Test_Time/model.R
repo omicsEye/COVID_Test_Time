@@ -144,6 +144,14 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
                       freqShock, Xshock, testfreq_UNP, testfreq_VAXP, testfreq_EVP, testfreq_CVP,
                       Se, Sp)
 {
+  nUNP <- nUNP * n
+  nVAXP <- nVAXP * n
+  nEVP <- nEVP * n
+  nCVP <- nCVP * n
+  AUNP0 <- AUNP0 * n
+  AVAXP0 <- AVAXP0 * n
+  AEVP0 <- AEVP0 * n
+  ACVP0 <- ACVP0 * n
   UUNP0 <- nUNP - AUNP0  # uninfected, susceptible, unprotected
   EUNP0 <- 0 # exposed, asymptomatic, unprotected
   M0 <- 0   # infected, symptomatic, isolated
@@ -219,7 +227,7 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
   FPCVP <- N
   
   D <- N
-  
+  inisolation <- N
   ### Baseline
   UUNP[1] <- UUNP0
   EUNP[1] <- EUNP0
@@ -325,7 +333,7 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
     EUNP[i+1] <- EUNP[i]*(1-theta) + ZUUNP[i+1] + YUUNP[i+1]
     ### Asymptomatic
     if (i == 1)
-      AUNP[i+1] <- AUNP[i]*(1 - sigma - rho) - 0*tau_UNP*Se + EUNP[i]*theta
+      AUNP[i+1] <- AUNP[i]*(1 - sigma - rho) - 0*tau_UNP*Se + EUNP[i]*theta # why is there a term with 0 ?
     else
       AUNP[i+1] <- AUNP[i]*(1 - sigma - rho) - AUNP[i-1]*tau_UNP*Se + EUNP[i]*theta
     ### Symptomatic
@@ -336,12 +344,12 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
                                                 ACVP[i] + TPCVP[i])
     ### false positives    
     if (i == 1)
-      FPUNP[i+1] <- FPUNP[i]*(1-mu) + 0*tau_UNP*(1-Sp)
+      FPUNP[i+1] <- FPUNP[i]*(1-mu) + 0*tau_UNP*(1-Sp) # why is there a term with 0 ?
     else
       FPUNP[i+1] <- FPUNP[i]*(1-mu) + UUNP[i-1]*tau_UNP*(1-Sp)
     ### true positives
     if (i == 1)
-      TPUNP[i+1] <- TPUNP[i]*(1 - sigma - rho) + 0*tau_UNP*Se
+      TPUNP[i+1] <- TPUNP[i]*(1 - sigma - rho) + 0*tau_UNP*Se # why is there a term with 0 ?
     else 
       TPUNP[i+1] <- TPUNP[i]*(1 - sigma - rho) + AUNP[i-1]*tau_UNP*Se
     
@@ -349,11 +357,11 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
     ### recoveries will be added to UCVP
     if (i == 1)
     {
-      UVAXP[i+1] <- UVAXP[i] - 0*tau_VAXP*(1-Sp) - ZUVAXP[i+1] - YUVAXP[i+1] + 
+      UVAXP[i+1] <- UVAXP[i] - 0*tau_VAXP*(1-Sp) - ZUVAXP[i+1] - YUVAXP[i+1] + # why is there a term with 0 ?
         mu*FPVAXP[i] ##
-      UEVP[i+1] <- UEVP[i] - 0*tau_EVP*(1-Sp) - ZUEVP[i+1] - YUEVP[i+1] + 
+      UEVP[i+1] <- UEVP[i] - 0*tau_EVP*(1-Sp) - ZUEVP[i+1] - YUEVP[i+1] + # why is there a term with 0 ?
         mu*FPEVP[i]
-      UCVP[i+1] <- UCVP[i] - 0*tau_CVP*(1-Sp) - ZUCVP[i+1] - YUCVP[i+1] + 
+      UCVP[i+1] <- UCVP[i] - 0*tau_CVP*(1-Sp) - ZUCVP[i+1] - YUCVP[i+1] + # why is there a term with 0 ?
         mu*FPCVP[i] + rho*(AUNP[i]+M[i]+TPUNP[i]+AVAXP[i]+TPVAXP[i]+AEVP[i]+TPEVP[i] +
                              ACVP[i]+TPCVP[i])
     }
@@ -375,9 +383,9 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
     ### Asymptomatic
     if (i == 1)
     {
-      AVAXP[i+1] <- AVAXP[i]*(1-sigma-rho) - 0*tau_VAXP*Se + EVAXP[i]*theta
-      AEVP[i+1] <- AEVP[i]*(1-sigma-rho) - 0*tau_EVP*Se + EEVP[i]*theta
-      ACVP[i+1] <- ACVP[i]*(1-sigma-rho) - 0*tau_CVP*Se + ECVP[i]*theta
+      AVAXP[i+1] <- AVAXP[i]*(1-sigma-rho) - 0*tau_VAXP*Se + EVAXP[i]*theta # why is there a term with 0 ?
+      AEVP[i+1] <- AEVP[i]*(1-sigma-rho) - 0*tau_EVP*Se + EEVP[i]*theta # why is there a term with 0 ?
+      ACVP[i+1] <- ACVP[i]*(1-sigma-rho) - 0*tau_CVP*Se + ECVP[i]*theta # why is there a term with 0 ?
     }
     else 
     {
@@ -389,9 +397,9 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
     ### False positives
     if (i==1)
     {
-      FPVAXP[i+1] <- FPVAXP[i]*(1-mu) + 0*tau_VAXP*(1-Sp)
-      FPEVP[i+1] <- FPEVP[i]*(1-mu) + 0*tau_EVP*(1-Sp)
-      FPCVP[i+1] <- FPCVP[i]*(1-mu) + 0*tau_CVP*(1-Sp)
+      FPVAXP[i+1] <- FPVAXP[i]*(1-mu) + 0*tau_VAXP*(1-Sp) # why is there a term with 0 ?
+      FPEVP[i+1] <- FPEVP[i]*(1-mu) + 0*tau_EVP*(1-Sp) # why is there a term with 0 ?
+      FPCVP[i+1] <- FPCVP[i]*(1-mu) + 0*tau_CVP*(1-Sp) # why is there a term with 0 ?
     }
     else
     {
@@ -403,9 +411,9 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
     ### True positives
     if (i == 1)
     {
-      TPVAXP[i+1] <- TPVAXP[i]*(1-sigma-rho) + 0*tau_VAXP*Se
-      TPEVP[i+1] <- TPEVP[i]*(1-sigma-rho) + 0*tau_EVP*Se
-      TPCVP[i+1] <- TPCVP[i]*(1-sigma-rho) + 0*tau_CVP*Se
+      TPVAXP[i+1] <- TPVAXP[i]*(1-sigma-rho) + 0*tau_VAXP*Se # why is there a term with 0 ?
+      TPEVP[i+1] <- TPEVP[i]*(1-sigma-rho) + 0*tau_EVP*Se # why is there a term with 0 ?
+      TPCVP[i+1] <- TPCVP[i]*(1-sigma-rho) + 0*tau_CVP*Se # why is there a term with 0 ?
     }
     else
     {
@@ -428,7 +436,9 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
   
   newinf <- (EUNP + EVAXP + EEVP + ECVP)*theta
   cumnewinf <- cumsum(EUNP + EVAXP + EEVP + ECVP)*theta
-  cbind(N, UUNP, EUNP, AUNP, M, FPUNP, TPUNP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP, 
-        UEVP, EEVP, AEVP, FPEVP, TPEVP, UCVP, ECVP, ACVP, FPCVP, TPCVP, D, newinf, cumnewinf, totalN)
+  r <- data.table(cbind(N, UUNP, EUNP, AUNP, M, FPUNP, TPUNP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP, 
+        UEVP, EEVP, AEVP, FPEVP, TPEVP, UCVP, ECVP, ACVP, FPCVP, TPCVP, D, newinf, cumnewinf,totalN))
+  r[,inisolation:=mapply(sum, M ,FPVAXP , TPVAXP , TPCVP , TPEVP , FPEVP , FPCVP , TPUNP , FPUNP)]
+  return(r)
 }
 
