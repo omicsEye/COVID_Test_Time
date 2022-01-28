@@ -1,5 +1,5 @@
 # Initial / Default Parameters
-n <- 25000
+n <- 15000
 nUNP <- 0.02  ### 2 % unprotected (previous U0)
 # there are about 500 non-vaccinated + 2500 without boosters; consider these non-vaccinated
 nVAXP <- (1-0.02-0.15-0.125) #0.8*n  # vaccine protected (previous UVAXP0)
@@ -36,53 +36,67 @@ ACVP0 <- 0 # asymptomatic, prior infection with current variant (Omicron)
 # FPCVP0 <- 0 # uninfected, false positive, prior infection with current variant (Omicron), isolated
 
 
+
+
+n <- 25000
+nUNP <- 0.025*n ### 2.5% unprotected
+nVAXP <- 0.8*n
+nEVP <- 0.05*n
+nCVP <- 0.125*n
+AUNP0 <- 25
+AVAXP0 <- 0.05*nVAXP
+AEVP0 <- 0.04*nEVP
+ACVP0 <- 0
+
 daystoincubation <- 3
-daystorecovery <- 8
+daystorecovery <- 10
 percenttosymptoms <- 0.3
 fptouninfpool <- 1
-percentfatality <- 0.0001
-R0 <- 3.7   ### reproduction rate # is 1.6 more realistic with masks, etc?
+percentfatality <- 0.0005
+R0 <- 3
 ncycles <- 120
 
-epsilon_VAXi0 <- 0.7 # 0.85 # assuming boosted (55-80 against symptomatic - reduced by 10% for actual infection)
-epsilon_VAXi6m <- 0.4 # 0.66 # (taking the low range of booster; get true number from 10 weeks study)
-epsilon_VAXt0 <- 0.5 # 0.25 (assuming another 20% reduction for transmissibility)
-epsilon_VAXt6m <- 0.2 #0.25
+epsilon_VAXi0 <- 0.5
+epsilon_VAXi6m <- 0.2
+epsilon_VAXt0 <- 0.1
+epsilon_VAXt6m <- 0.1
 
-epsilon_EVi0 <-  0.4 # 0.85 # protection for Omicron is rather low (20% for symptomatic at 6M)
-epsilon_EVi6m <- 0.1 # 0.66
-epsilon_EVt0 <- 0.2 # 0.25
-epsilon_EVt6m <- 0.0 # 0.25
+epsilon_EVi0 <- 0.5
+epsilon_EVi6m <- 0.2
+epsilon_EVt0 <- 0.1
+epsilon_EVt6m <- 0.1
 
-epsilon_CVi0 <- 1 
-epsilon_CVi6m <- 0.6 # 1 # it may wane faster than 6M
+epsilon_CVi0 <- 1
+epsilon_CVi6m <- 1
 epsilon_CVt0 <- 1
-epsilon_CVt6m <- 0.6 # 1
+epsilon_CVt6m <- 1
 
 freqShock <- 1
-Xshock <- 0.005*n # JS: This is more realistic than 5 for 25,000
-testfreq_UNP <- 7.0
-testfreq_VAXP <- 14.0
-testfreq_EVP <- 14.0
-testfreq_CVP <- 14.0
+DynamicShock <- FALSE
+Xshock <- 25
 
-Se <- 0.99 # JS
-Sp <- 0.9999 # JS
-mu <- 1
-source("model.R", local = TRUE)
-params <- list(n=n, nUNP=nUNP, nVAXP=nVAXP, nEVP=nEVP, nCVP=nCVP, AUNP0=AUNP0, AVAXP0=AVAXP0, AEVP0=AEVP0,
-               ACVP0=ACVP0, ncycles=ncycles, daystoincubation=daystoincubation, daystorecovery=daystorecovery, 
-               percenttosymptoms=percenttosymptoms,
-               fptouninfpool=fptouninfpool, percentfatality=percentfatality, R0=R0, 
-               epsilon_VAXt0=epsilon_VAXt0, epsilon_VAXt6m=epsilon_VAXt6m, epsilon_VAXi0=epsilon_VAXi0, 
-               epsilon_VAXi6m=epsilon_VAXi6m,
-               epsilon_EVt0=epsilon_EVt0, epsilon_EVt6m=epsilon_EVt6m, epsilon_EVi0=epsilon_EVi0, 
-               epsilon_EVi6m=epsilon_EVi6m,
-               epsilon_CVt0=epsilon_CVt0, epsilon_CVt6m=epsilon_CVt6m, epsilon_CVi0=epsilon_CVi0,
-               epsilon_CVi6m=epsilon_CVi6m,freqShock=freqShock, Xshock=Xshock, testfreq_UNP=testfreq_UNP, 
-               testfreq_VAXP=testfreq_VAXP, testfreq_EVP=testfreq_EVP, testfreq_CVP=testfreq_CVP,
-               Se=Se, Sp=Sp)
-results <- data.table(do.call(covidpred,params))
-results[,plot(.I,inisolation,type='l')]
+testfreq_UNP <- 7 ### weekly testing
+testfreq_VAXP <- 7
+testfreq_EVP <- 7
+testfreq_CVP <- 7
+Se <- 0.99
+Sp <- 0.99
 
-#plot(results$newinf, results$TP)
+test <- covidpred(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
+                  ncycles, daystoincubation, daystorecovery, percenttosymptoms,
+                  fptouninfpool, percentfatality, R0,
+                  epsilon_VAXt0, epsilon_VAXt6m, epsilon_VAXi0, epsilon_VAXi6m,
+                  epsilon_EVt0, epsilon_EVt6m, epsilon_EVi0, epsilon_EVi6m,
+                  epsilon_CVt0, epsilon_CVt6m, epsilon_CVi0, epsilon_CVi6m,
+                  freqShock, DynamicShock, Xshock, testfreq_UNP, testfreq_VAXP, testfreq_EVP, testfreq_CVP,
+                  Se, Sp)
+
+
+pdf("Covid_Pred_DynamicShock_Figure.pdf")
+plot(c(1:121)-1, test$newinf,type="l", xlab="Days", ylab="Daily new infections")
+
+plot(c(1:121)-1, test$cumnewinf,type="l", xlab="Days", ylab="Cumulative number of new infections")
+
+### subjects in the isolation pool
+plot(c(1:121)-1, test$totiso,type="l", xlab="Days", ylab="Daily Number of Isolations")
+dev.off()

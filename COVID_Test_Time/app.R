@@ -4,7 +4,7 @@ library(ggplot2);library(plotly)
 library(data.table)
 source("model.R", local = TRUE)
 source("utils.R", local = TRUE)
-source("user_parameters.R")
+source("user_parameters.R", local = TRUE)
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
   # App title ----
@@ -128,7 +128,6 @@ ui <- fluidPage(
       fluidRow(column(
         width = 12,
         numericInput(
-
           inputId = "delta",
           label = "% fatality rate:",
           value = percentfatality,
@@ -137,8 +136,15 @@ ui <- fluidPage(
       )),
       fluidRow(column(
         width = 12,
+        checkboxInput(inputId = "DynamicShock",
+                      label = "If DynamicShock, then the number of imported new infections is proportional to
+                      the number of individuals in the A states (AUNP, AVAXP, AEVP, ACVP)",
+                      value = DynamicShock
+        )
+      )),
+      fluidRow(column(
+        width = 12,
         numericInput(
-
           inputId = "Xshock",
           label = "Daily number of \ninported infections (Xshock):",
           value = Xshock,
@@ -420,7 +426,7 @@ ui <- fluidPage(
                   inputId = "yfield",
                   label = "Select field to plot on y:",
                   choices = c(names(results)),
-                  selected = 'inisolation'
+                  selected = 'totiso'
                 )),
               column(
                 width = 2,
@@ -496,9 +502,6 @@ server <- function(session, input, output) {
     }
   })
   ### end JS code for reset defaults
-
-
-
     params <- reactive(list(
       n=input$n,
       testfreq_UNP=input$test_frequency_UNP,
@@ -539,7 +542,8 @@ server <- function(session, input, output) {
       epsilon_CVt0=input$epsilon_CVt0,
       epsilon_CVt6m=input$epsilon_CVt6m,
 
-      freqShock=freqShock,
+      freqShock=input$freqShock,
+      DynamicShock=input$DynamicShock,
       Xshock=input$Xshock,
       #test_frequency <- input$test_frequency
       # number_of_tests <- input$ncycles / input$test_frequency
@@ -559,13 +563,13 @@ server <- function(session, input, output) {
     # epsilon_VAXt0, epsilon_VAXt6m, epsilon_VAXi0, epsilon_VAXi6m,
     # epsilon_EVt0, epsilon_EVt6m, epsilon_EVi0, epsilon_EVi6m,
     # epsilon_CVt0, epsilon_CVt6m, epsilon_CVi0, epsilon_CVi6m,
-    # freqShock, Xshock, testfreq_UNP, testfreq_VAXP, testfreq_EVP, testfreq_CVP,
+    # freqShock, totiso, testfreq_UNP, testfreq_VAXP, testfreq_EVP, testfreq_CVP,
     # Se, Sp)
     # results <- list()
     # results$Data <- data.table(prediction_results)
     # results$n<- n
     # results$ncycles <- ncycles
-    # # results$Data[,inisolation:=mapply(sum,M,FPVAXP,TPVAXP,TPCVP,TPEVP,FPEVP,FPCVP,TPUNP,FPUNP)]
+    # # results$Data[,totiso:=mapply(sum,M,FPVAXP,TPVAXP,TPCVP,TPEVP,FPEVP,FPCVP,TPUNP,FPUNP)]
     # return(results)
   # })
 # results
@@ -576,7 +580,7 @@ output$accumlative <- renderPlotly({
   ggplotly(
     ggplot2::ggplot(results,
                     aes(x=day,
-                        y=inisolation)) +
+                        y=totiso)) +
       ggplot2::geom_line(size = .5) +
       ggplot2::geom_abline(slope=0,intercept=300, col='red', size = .25) +
       ggplot2::geom_hline(yintercept = 0,
