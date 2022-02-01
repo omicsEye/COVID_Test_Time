@@ -441,11 +441,8 @@ covidpred <- function(n, nUNP, nVAXP, nEVP, nCVP, AUNP0, AVAXP0, AEVP0, ACVP0,
 
   newinf <- (EUNP + EVAXP + EEVP + ECVP)*theta
   cumnewinf <- cumsum(EUNP + EVAXP + EEVP + ECVP)*theta
-  cbind(N, UUNP, EUNP, AUNP, M, FPUNP, TPUNP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP,
-        UEVP, EEVP, AEVP, FPEVP, TPEVP, UCVP, ECVP, ACVP, FPCVP, TPCVP, D, newinf, cumnewinf, totalN)
-
-  result_data_frame <- data.table(cbind(N, UUNP, EUNP, AUNP, M, FPUNP, TPUNP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP,
+  results <- data.table(cbind(N, UUNP, EUNP, AUNP, M, FPUNP, TPUNP, UVAXP, EVAXP, AVAXP, FPVAXP, TPVAXP,
                                         UEVP, EEVP, AEVP, FPEVP, TPEVP, UCVP, ECVP, ACVP, FPCVP, TPCVP, D, newinf, cumnewinf,totalN))
-  result_data_frame[,totiso:=mapply(sum, TPUNP ,FPUNP , TPVAXP , FPVAXP , TPEVP , FPEVP , TPCVP , FPCVP , M)]
-  return(result_data_frame)
+  results[,inisolation:=mapply(sum, TPUNP ,FPUNP , TPVAXP , FPVAXP , TPEVP , FPEVP , TPCVP , FPCVP , M)]
+  return(results)
 }
