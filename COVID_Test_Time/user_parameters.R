@@ -3,7 +3,6 @@ n <- 25000
 nUNP <- 0.02  ### 2 % unprotected (previous U0)
 # there are about 500 non-vaccinated + 2500 without boosters; consider these non-vaccinated
 nVAXP <- (1-0.02-0.15-0.125) #0.8*n  # vaccine protected (previous UVAXP0)
-
 nEVP <- 0.15 # prior infection with earlier variants (previous UEVP0)
 nCVP <- 0.125  #0.125*n # prior infection with current variant (Omicron) (previous UCVP0)
 # # We did not have that many infections; based on 2000/100K weekly peak rate in the DC community
@@ -69,7 +68,6 @@ testfreq_CVP <- 14.0
 
 Se <- 0.99 # JS
 Sp <- 0.9999 # JS
-mu <- 1
 source("model.R", local = TRUE)
 params <- list(n=n, nUNP=nUNP, nVAXP=nVAXP, nEVP=nEVP, nCVP=nCVP, AUNP0=AUNP0, AVAXP0=AVAXP0, AEVP0=AEVP0,
                ACVP0=ACVP0, ncycles=ncycles, daystoincubation=daystoincubation, daystorecovery=daystorecovery,
@@ -84,4 +82,4 @@ params <- list(n=n, nUNP=nUNP, nVAXP=nVAXP, nEVP=nEVP, nCVP=nCVP, AUNP0=AUNP0, A
                testfreq_VAXP=testfreq_VAXP, testfreq_EVP=testfreq_EVP, testfreq_CVP=testfreq_CVP,
                Se=Se, Sp=Sp)
 results <- data.table(do.call(covidpred,params))
-results[,plot(.I,inisolation,type='l')]
+#results[,plot(.I,inisolation,type='l')]
