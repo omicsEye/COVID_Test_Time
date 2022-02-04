@@ -1,6 +1,6 @@
 # Initial / Default Parameters
 n <- 25000
-nUNP <- 0.02  ### 2 % unprotected (previous U0)
+nUNP <- 0.02*n  ### 2 % unprotected (previous U0)
 # there are about 500 non-vaccinated + 2500 without boosters; consider these non-vaccinated
 nVAXP <- (1-0.02-0.15-0.125) #0.8*n  # vaccine protected (previous UVAXP0)
 nEVP <- 0.15 # prior infection with earlier variants (previous UEVP0)
